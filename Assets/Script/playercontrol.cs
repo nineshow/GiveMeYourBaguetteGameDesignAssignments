@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     public int attackDamage = 40;        // 攻击力
     public float attackRange = 0.8f;     // 攻击范围半径
     public float attackOffset = 0.6f;    // 攻击判定点在人物前方的距离
-    public LayerMask enemyLayer;         // 告诉代码谁是敌人
+    public string enemyTag = "Enemy";         // 告诉代码谁是敌人
 
     private Rigidbody2D rb;
     private float horizontalInput;
@@ -60,13 +60,13 @@ public class PlayerController : MonoBehaviour
         Vector2 attackCenter = new Vector2(transform.position.x + (transform.localScale.x * attackOffset), transform.position.y);
 
         // 2. 画一个无形的圆，找出圆内所有位于 enemyLayer 的碰撞体
-        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackCenter, attackRange, enemyLayer);
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackCenter, attackRange);
 
         // 3. 挨个造成伤害
         foreach (Collider2D enemy in hitEnemies)
         {
             // 找到敌人身上的 EnemySystem 脚本，并调用受伤方法
-            enemy.GetComponent<EnemySystem>().TakeDamage(attackDamage);
+            enemy.GetComponent<EnemySystem>().TakeDamage2(attackDamage);
         }
     }
 

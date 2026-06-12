@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class HealthPoint : MonoBehaviour
 {
+    public GameObject coinPrefab; 
+
      [Header("Health Settings")]
     public int maxHP = 100;
     public int currentHP;
@@ -42,11 +44,17 @@ public class HealthPoint : MonoBehaviour
         }
     }
 
-    public void Heal(int amount)
+    public void Heal(int healAmount)
     {
-        currentHP += amount;
-        //Clamp to make sure 0 < currentHP < maxHP
-        currentHP = Mathf.Clamp(currentHP, 0, maxHP);
+        currentHP += healAmount;
+        
+        // 防止血量超过上限
+        if (currentHP > maxHP)
+        {
+            currentHP = maxHP;
+        }
+        
+        Debug.Log("当前生命值：" + currentHP);
     }
 
     //if died use this
@@ -57,6 +65,7 @@ public class HealthPoint : MonoBehaviour
         //if destroyOnDeath=True, destroy
         if (destroyOnDeath)
         {
+            Instantiate(coinPrefab, transform.position, Quaternion.identity);
             Destroy(gameObject);
         }
     }

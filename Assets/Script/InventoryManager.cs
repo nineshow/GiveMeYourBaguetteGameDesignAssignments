@@ -13,13 +13,15 @@ public class InventoryManager : MonoBehaviour
     public int potionPrice = 20;
     public int healAmount = 30;
 
-    [Header("UI Elements")]
+    [Header("UI Elements(Always Visible)")]
     public Text goldText;
-    public GameObject inventoryPanel;
     public Text potionText; // New text for potions
+    public Button usePotionButton;  
 
+    [Header("Inventory Settings (Tab Panel)")]
+    public GameObject inventoryPanel;
     private bool isInventoryOpen = false;
-    private PlayerHealth playerHealth;
+    private HealthPoint currentHP;
 
     void Awake()
     {
@@ -32,7 +34,7 @@ public class InventoryManager : MonoBehaviour
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
         {
-            playerHealth = player.GetComponent<PlayerHealth>();
+            currentHP = player.GetComponent<HealthPoint>();
         }
 
         UpdateUI();
@@ -48,6 +50,10 @@ public class InventoryManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             ToggleInventory();
+        }
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            UsePotion();
         }
     }
 
@@ -79,10 +85,10 @@ public class InventoryManager : MonoBehaviour
     {
         if (potionCount > 0)
         {
-            if (playerHealth != null)
+            if (currentHP != null)
             {
                 potionCount--;
-                playerHealth.Heal(healAmount);
+                currentHP.Heal(healAmount);
                 UpdateUI();
             }
         }

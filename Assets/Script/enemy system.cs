@@ -13,7 +13,7 @@ public class EnemySystem : MonoBehaviour
         currentHealth = maxHealth;
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage2(int damage)
     {
         currentHealth -= damage;
         Debug.Log("敌人受到伤害！剩余血量：" + currentHealth);
