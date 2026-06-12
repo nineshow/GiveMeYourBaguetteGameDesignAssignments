@@ -919,7 +919,7 @@ GameObject:
   - component: {fileID: 1034310605}
   - component: {fileID: 1034310604}
   m_Layer: 5
-  m_Name: buy button
+  m_Name: Buy Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1283,7 +1283,7 @@ GameObject:
   - component: {fileID: 1831742879}
   - component: {fileID: 1831742878}
   m_Layer: 0
-  m_Name: game manager
+  m_Name: Game Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1336,7 +1336,7 @@ GameObject:
   - component: {fileID: 1962462791}
   - component: {fileID: 1962462790}
   m_Layer: 5
-  m_Name: use button
+  m_Name: Potion Button(temp)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
