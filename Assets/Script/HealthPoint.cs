@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HealthPoint : MonoBehaviour
 {
@@ -10,13 +11,17 @@ public class HealthPoint : MonoBehaviour
     public int maxHP = 100;
     public int currentHP;
 
+    [Header("UI Settings")]
+    public Image healthFill;
+
     [Header("Optional")]
     //if true=destroy gameobject, false=manually do something else
     public bool destroyOnDeath;
 
     void Start()
     {
-        currentHP = maxHP;
+        currentHP = 50;
+        UpdateHealthUI();
     }
 
     public void TakeDamage(int damage)
@@ -35,6 +40,10 @@ public class HealthPoint : MonoBehaviour
         int finalDamage=Mathf.RoundToInt(damage*multiplier);
 
         currentHP -= finalDamage;
+
+        if (currentHP < 0) currentHP = 0;
+
+        UpdateHealthUI();
 
         Debug.Log(gameObject.name + " HP: " + currentHP);
 
@@ -55,6 +64,17 @@ public class HealthPoint : MonoBehaviour
         }
         
         Debug.Log("当前生命值：" + currentHP);
+
+        UpdateHealthUI();
+    }
+
+    private void UpdateHealthUI()
+    {
+        if (healthFill != null)
+        {
+            // 将当前血量转换为 0 到 1 之间的小数，赋值给 fillAmount
+            healthFill.fillAmount = (float)currentHP / maxHP;
+        }
     }
 
     //if died use this
