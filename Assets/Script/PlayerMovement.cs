@@ -33,6 +33,8 @@ public class PlayerMovement : MonoBehaviour
 
     private bool isGliding;
 
+    private bool isTakingDamage;
+
     // 【新增 1】：声明动画控制器
     private Animator anim; 
 
