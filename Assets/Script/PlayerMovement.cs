@@ -65,7 +65,7 @@ public class PlayerMovement : MonoBehaviour
     {
         isTakingDamage=true;
 
-        yield return new WaitForSeconds(0.5);
+        yield return new WaitForSeconds(0.5f);
         
         isDashing=false;
     }
