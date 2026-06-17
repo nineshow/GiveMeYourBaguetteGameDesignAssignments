@@ -41,7 +41,7 @@ public class AchievementManager : MonoBehaviour
 
         achievement.unlocked = true;
 
-        Debug.Log("Achievement Unlocked: " + achievement.title + achievement.description);
+        Debug.Log("Achievement Unlocked: " + achievement.title + ": " + achievement.description);
        
     }
 

@@ -109,4 +109,26 @@ public class InventoryManager : MonoBehaviour
         isInventoryOpen = !isInventoryOpen;
         if (inventoryPanel != null) inventoryPanel.SetActive(isInventoryOpen);
     }
+
+    public void PickupItem(ItemType itemType, int amount = 1, string achievementID = null)
+{
+    switch (itemType)
+    {
+        case ItemType.Potion:
+            potionCount += amount;
+            UpdateUI();
+            break;
+
+        case ItemType.Key:
+            Debug.Log("Key picked up");
+            break;
+    }
+
+    Debug.Log("Picked up: " + itemType + " x" + amount);
+
+    if (!string.IsNullOrEmpty(achievementID))
+    {
+        AchievementManager.Instance.Unlock(achievementID);
+    }
+}
 }
