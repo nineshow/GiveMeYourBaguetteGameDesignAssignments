@@ -8,7 +8,7 @@ public class BossHealth : MonoBehaviour
     public GameObject coinPrefab; 
 
      [Header("Health Settings")]
-    public int maxHP = 520;
+    public int maxHP = 250;
     public int currentHP;
 
     [Header("UI Settings")]
@@ -20,7 +20,7 @@ public class BossHealth : MonoBehaviour
 
     void Start()
     {
-        currentHP = 520;
+        currentHP = 250;
         UpdateHealthUI();
     }
 
