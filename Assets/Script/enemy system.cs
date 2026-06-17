@@ -106,7 +106,7 @@ public class EnemyAI : MonoBehaviour
     }
 
     // --- 状态 3：攻击 ---
-   // --- 状态 3：攻击 ---
+    // --- 状态 3：攻击 ---
     void AttackPlayer()
     {
         // 站在原地打人，停止移动
@@ -128,18 +128,22 @@ public class EnemyAI : MonoBehaviour
             if (hp != null)
             {
                 // 怪物发动攻击，传入基础伤害
+                // (最终扣多少血依然由 HealthPoint 里你写的 Mathf.RoundToInt 完美接管)
                 hp.TakeDamage(attackDamage);
 
                 // 根据玩家的防御状态，输出不同的反馈
                 if (combat != null && combat.isDefending)
                 {
-                    // 计算出实际伤害用于控制台显示
+                    // 计算出实际伤害用于控制台显示（和你在 HealthPoint 里的算法一致）
                     int realDamage = Mathf.RoundToInt(attackDamage * combat.GetDamageMultiplier());
-                    Debug.Log("玩家格挡成功，受到了 " + realDamage + " 点伤害！");
+                    Debug.Log("玩家格挡成功，受到了 " + realDamage + " 点伤害");
+                    
+                    // 【进阶玩法】：如果玩家防住了，你可以让怪物往后退一点（弹刀效果）
+                    // rb.AddForce(new Vector2(-direction * 5f, 0), ForceMode2D.Impulse); 
                 }
                 else
                 {
-                    Debug.Log("怪物造成了 " + attackDamage + " 点伤害。");
+                    Debug.Log("怪物造成了 " + attackDamage + " 点伤害");
                 }
             }
             
@@ -147,7 +151,6 @@ public class EnemyAI : MonoBehaviour
             attackTimer = attackCooldown; 
         }
     }
-    
 
     // --- 辅助方法：翻转怪物贴图 ---
     void FlipTowards(float direction)
