@@ -38,26 +38,15 @@ public class WeaponDamage : MonoBehaviour
         if (myCollider != null)
         {
             myCollider.enabled = true; // 开启 Collider 判定
-
-            // 让代码在这里等待一小段时间（比如 0.2 秒，也就是挥棍子砸过去的那一瞬间）
             yield return new WaitForSeconds(attackDuration);
-
             myCollider.enabled = false; // 时间到了，自动关闭 Collider
         }
     }
 
-    // if is triggered (只有在 Collider 被开启、且碰到物体时才会触发这一段)
+    // if is triggered
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // Check if it has HealthPoint component
-        HealthPoint health = other.GetComponent<HealthPoint>();
-
-        // if no health component, just return and end
-        if(health == null)
-        {
-            return;
-        }
-
+        // --- 第一步：先进行友军免伤检查 ---
         // player will not be hurt by player weapon
         if(gameObject.CompareTag("PlayerWeapon") && other.CompareTag("Player"))
         {
@@ -65,13 +54,26 @@ public class WeaponDamage : MonoBehaviour
         }
 
         // monster will not be hurt by monster weapon
-        if(gameObject.CompareTag("MonsterWeapon") && other.CompareTag("Monster"))
+        // (如果你的猎人 Tag 是 Enemy，这里也不会被拦截，完美兼容)
+        if(gameObject.CompareTag("MonsterWeapon") && (other.CompareTag("Monster")))
         {
             return;
         }
 
-        // if reach here, can just do damage as usual
-        // 只要通过了上面的友军免伤检查，直接造成伤害！
-        health.TakeDamage(damage);
+        // --- 第二步：尝试给小怪或玩家（带有 HealthPoint）造成伤害 ---
+        HealthPoint health = other.GetComponent<HealthPoint>();
+        if(health != null)
+        {
+            health.TakeDamage(damage);
+            return; // 造成伤害后直接结束判定
+        }
+
+        // --- 第三步：尝试给猎人 Boss（带有 BossHealth）造成伤害 ---
+        BossHealth bossHealth = other.GetComponent<BossHealth>();
+        if(bossHealth != null)
+        {
+            bossHealth.TakeDamage(damage);
+            return; // 造成伤害后直接结束判定
+        }
     }
 }
