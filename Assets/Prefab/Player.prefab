@@ -99,7 +99,7 @@ CapsuleCollider2D:
   m_GameObject: {fileID: 152291255017663829}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 15a38707c34a1cd488276951b787fa4e, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -187,8 +187,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58526fdfa33cbde4ab13fdb3e0fd6969, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  coinPrefab: {fileID: 0}
   maxHP: 100
   currentHP: 0
+  healthFill: {fileID: 0}
   destroyOnDeath: 0
 --- !u!114 &5922466655206825672
 MonoBehaviour:
