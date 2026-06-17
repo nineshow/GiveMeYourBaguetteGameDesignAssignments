@@ -1668,10 +1668,10 @@ MonoBehaviour:
   potionCount: 0
   potionPrice: 20
   healAmount: 30
-  goldText: {fileID: 0}
-  potionText: {fileID: 0}
-  usePotionButton: {fileID: 0}
-  inventoryPanel: {fileID: 0}
+  goldText: {fileID: 1692581776}
+  potionText: {fileID: 155405411}
+  usePotionButton: {fileID: 338588760}
+  inventoryPanel: {fileID: 922445545}
 --- !u!4 &1831742879
 Transform:
   m_ObjectHideFlags: 0

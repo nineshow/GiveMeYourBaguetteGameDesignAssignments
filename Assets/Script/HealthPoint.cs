@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class HealthPoint : MonoBehaviour
 {
     public GameObject coinPrefab; 
+    
 
      [Header("Health Settings")]
     public int maxHP = 100;
@@ -18,6 +19,8 @@ public class HealthPoint : MonoBehaviour
     //if true=destroy gameobject, false=manually do something else
     public bool destroyOnDeath;
 
+    
+
     void Start()
     {
         currentHP = 50;
@@ -26,7 +29,9 @@ public class HealthPoint : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+       
         PlayerCombat combat=GetComponent<PlayerCombat>();
+        PlayerMovement movement=GetComponent<PlayerMovement>();
 
         float multiplier=1f;
 
@@ -45,12 +50,17 @@ public class HealthPoint : MonoBehaviour
 
         UpdateHealthUI();
 
+        
+
         Debug.Log(gameObject.name + " HP: " + currentHP);
 
         if (currentHP <= 0)
         {
             Die();
         }
+        movement.isDamage();
+
+        
     }
 
     public void Heal(int healAmount)

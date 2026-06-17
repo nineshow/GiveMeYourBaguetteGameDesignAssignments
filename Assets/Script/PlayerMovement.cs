@@ -60,6 +60,20 @@ public class PlayerMovement : MonoBehaviour
         if (anim != null) anim.SetBool("isDashing", false);
     }
 
+    System.Collections.IEnumerator Hurt()
+    {
+        isTakingDamage=true;
+
+        yield return new WaitForSeconds(0.5f);
+        
+        isDashing=false;
+    }
+
+    public void isDamage()
+    {
+        StartCoroutine(Hurt());
+    }
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();

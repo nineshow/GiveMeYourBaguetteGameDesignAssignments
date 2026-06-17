@@ -12,6 +12,8 @@ public class WeaponDamage : MonoBehaviour
     private Collider2D myCollider;
     private Animator anim; // 声明动画控制器
 
+    
+
     void Start()
     {
         myCollider = GetComponent<Collider2D>();
@@ -70,6 +72,8 @@ public class WeaponDamage : MonoBehaviour
         if(health != null)
         {
             health.TakeDamage(damage);
+            
+    
             return; // 造成伤害后直接结束判定
         }
 
