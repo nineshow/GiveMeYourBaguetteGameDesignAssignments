@@ -32,6 +32,8 @@ public class PlayerMovement : MonoBehaviour
     private int facingDirection=1;
     private bool canDash=true;
 
+    private bool isGliding;
+
 
     // IEnumerator for Coroutine function
     // pause other, run this, then resume
@@ -129,6 +131,7 @@ public class PlayerMovement : MonoBehaviour
            && !isGrounded)
         {
             rb.gravityScale = glideGravity;
+            isGliding=true;
         }
         else
         {
@@ -139,6 +142,7 @@ public class PlayerMovement : MonoBehaviour
         if(isGrounded)
         {
             canDash=true;
+            isGliding=false;
         }
 
         // dash if left shift pressed and is not currently dashing
