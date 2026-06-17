@@ -33,7 +33,7 @@ public class PlayerMovement : MonoBehaviour
     private bool canDash=true;
 
     private bool isGliding;
-
+    public bool isTakingDamage;
 
     // IEnumerator for Coroutine function
     // pause other, run this, then resume
@@ -59,6 +59,20 @@ public class PlayerMovement : MonoBehaviour
         rb.gravityScale=originalGravity;
         //dashing end
         isDashing=false;
+    }
+
+    System.Collections.IEnumerator Hurt()
+    {
+        isTakingDamage=true;
+
+        yield return new WaitForSeconds(0.5);
+        
+        isDashing=false;
+    }
+
+    public void isDamage()
+    {
+        StartCoroutine(Hurt());
     }
 
     void Start()

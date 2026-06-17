@@ -11,6 +11,8 @@ public class WeaponDamage : MonoBehaviour
 
     private Collider2D myCollider;
 
+    
+
     void Start()
     {
         // 1. 获取武器自身的 Collider 2D 组件
@@ -65,6 +67,8 @@ public class WeaponDamage : MonoBehaviour
         if(health != null)
         {
             health.TakeDamage(damage);
+            
+    
             return; // 造成伤害后直接结束判定
         }
 
