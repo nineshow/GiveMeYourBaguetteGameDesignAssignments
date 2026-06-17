@@ -58,7 +58,11 @@ public class HealthPoint : MonoBehaviour
         {
             Die();
         }
-        movement.isDamage();
+        if(gameObject.CompareTag("Player") )
+        {
+            movement.isDamage();
+        }
+        
 
         
     }
