@@ -24,7 +24,6 @@ public class PlayerMovement : MonoBehaviour
 
     private bool standing;
 
-
     public float dashSpeed=15f;
     public float dashDuration=0.2f;
 
@@ -32,78 +31,78 @@ public class PlayerMovement : MonoBehaviour
     private int facingDirection=1;
     private bool canDash=true;
 
+    private bool isGliding;
+
+    // 【新增 1】：声明动画控制器
+    private Animator anim; 
 
     // IEnumerator for Coroutine function
-    // pause other, run this, then resume
     System.Collections.IEnumerator Dash()
     {
         isDashing=true;
 
-        //save original gravity so can resume later
+        // 【新增 2】：告诉动画机开始冲刺
+        if (anim != null) anim.SetBool("isDashing", true);
+
         float originalGravity=rb.gravityScale;
-        //disable gravity so no falling while dashing
         rb.gravityScale=0f;
 
-        //dash for the speed set towards the direction
-        //0f so no falling
         rb.velocity=new Vector2(
             facingDirection*dashSpeed,
             0f
         );
 
-        //pause and wait for sometime for dash to finish
         yield return new WaitForSeconds(dashDuration);
-        //restore gravity
         rb.gravityScale=originalGravity;
-        //dashing end
         isDashing=false;
+
+        // 【新增 3】：告诉动画机结束冲刺
+        if (anim != null) anim.SetBool("isDashing", false);
     }
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         jumpsRemaining=maxJumps;
-    }
 
-   
+        // 【新增 4】：获取动画组件
+        anim = GetComponentInChildren<Animator>();
+    }
 
     void Update()
     {
-        // if dashing disable movement
+        // 动画同步：每帧将落地状态同步给动画机（方便做空中/落地判定）
+        if (anim != null) anim.SetBool("isGrounded", isGrounded);
+
         if(isDashing)
         {
             return;
         }
 
-
-        // Ground Detection
         isGrounded = Physics2D.OverlapCircle(
             groundCheck.position,
             0.2f,
             groundLayer
         );
 
-        // Reset jump when touch ground
-        // Do not repeat if is just standing
         if(isGrounded && !standing)
         {
             jumpsRemaining=maxJumps;
         }
-        // if is Grounded, must be standing too
         standing=isGrounded;
 
-        // Horizontal Movement
         float moveInput = Input.GetAxisRaw("Horizontal");
 
-        // facing right
+        // 【修改】：加入了 transform.localScale 翻转逻辑，解决太空步问题
         if(moveInput>0)
         {
             facingDirection=1;
+            transform.localScale = new Vector3(1, 1, 1); // 面朝右
         }
-        // facing left
         else if(moveInput<0)
         {
             facingDirection=-1;
+            transform.localScale = new Vector3(-1, 1, 1); // 面朝左
         }
 
         rb.velocity = new Vector2(
@@ -111,46 +110,53 @@ public class PlayerMovement : MonoBehaviour
             rb.velocity.y
         );
 
-        // Jump when space key + still have remaining jump
+        // 【新增 5】：跑步动画控制
+        if (anim != null)
+        {
+            bool isMoving = Mathf.Abs(moveInput) > 0f;
+            anim.SetBool("isRunning", isMoving);
+        }
+
         if(Input.GetKeyDown(KeyCode.Space) && jumpsRemaining>0)
         {
             rb.velocity = new Vector2(
                 rb.velocity.x,
                 jumpForce
             );
-
             jumpsRemaining--;
+
+            // 【新增 6】：触发跳跃动画
+            if (anim != null) anim.SetTrigger("Jump");
         }
 
-
-        // Glide when holding L
         if(Input.GetKey(KeyCode.L)
            && rb.velocity.y < 0
            && !isGrounded)
         {
             rb.gravityScale = glideGravity;
+            isGliding=true;
         }
         else
         {
             rb.gravityScale = normalGravity;
+            isGliding=false;
         }
         
-        // reset dash when touching ground
+        // 【新增 7】：滑翔动画控制
+        if (anim != null) anim.SetBool("isGliding", isGliding);
+
         if(isGrounded)
         {
             canDash=true;
+            isGliding=false;
         }
 
-        // dash if left shift pressed and is not currently dashing
-        // canDash check for limiting only one dash while jumping
         if(Input.GetKeyDown(KeyCode.LeftShift) 
         && !isDashing
         && canDash)
         {
             canDash=false;
-            // start Dash() as a coroutine
             StartCoroutine(Dash());
         }
-
     }
 }

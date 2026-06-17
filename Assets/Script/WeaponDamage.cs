@@ -10,25 +10,30 @@ public class WeaponDamage : MonoBehaviour
     public float attackDuration = 0.2f; // 按下J后，Collider开启多长时间（秒）
 
     private Collider2D myCollider;
+    private Animator anim; // 声明动画控制器
 
     void Start()
     {
-        // 1. 获取武器自身的 Collider 2D 组件
         myCollider = GetComponent<Collider2D>();
+        if (myCollider != null) myCollider.enabled = false;
 
-        // 2. 游戏一开始，默认把自己的 Collider 关闭，防止平时走路蹭死怪
-        if (myCollider != null)
-        {
-            myCollider.enabled = false;
-        }
+        anim = transform.root.GetComponentInChildren<Animator>();
+        
     }
 
     void Update()
     {
-        // 3. 每一帧监听键盘：如果按下 J 键，启动开启 Collider 的协程
+        // 按下 J 键攻击
         if (Input.GetKeyDown(KeyCode.J))
         {
+            // --- 【终极测试的输出加在这里】 ---
+            if (anim != null)
+            {
+                anim.SetTrigger("Attack");
+            // ---------------------------------
+
             StartCoroutine(TriggerColliderRoutine());
+            }
         }
     }
 
