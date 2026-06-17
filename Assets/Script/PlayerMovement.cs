@@ -136,9 +136,10 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             rb.gravityScale = normalGravity;
+            isGliding=false;
         }
         
-        // reset dash when touching ground
+        // reset dash and glide when touching ground
         if(isGrounded)
         {
             canDash=true;
