@@ -12,8 +12,8 @@ public class PlayerCombat : MonoBehaviour
 
     void Update()
     {
-        //hold Z to defend
-        isDefending=Input.GetKey(KeyCode.RightShift);
+        //hold K to defend
+        isDefending=Input.GetKey(KeyCode.K);
     }
 
     // to get the reduction percent

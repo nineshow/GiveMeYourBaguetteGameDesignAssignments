@@ -123,8 +123,8 @@ public class PlayerMovement : MonoBehaviour
         }
 
 
-        // Glide when holding Z
-        if(Input.GetKey(KeyCode.Z)
+        // Glide when holding L
+        if(Input.GetKey(KeyCode.L)
            && rb.velocity.y < 0)
         {
             rb.gravityScale = glideGravity;
