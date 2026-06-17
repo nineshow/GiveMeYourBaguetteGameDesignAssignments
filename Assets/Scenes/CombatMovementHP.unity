@@ -2136,6 +2136,14 @@ PrefabInstance:
       propertyPath: currentHP
       value: 50
       objectReference: {fileID: 0}
+    - target: {fileID: 6005209353675424119, guid: cab54508aae841942bdf4e6ca03b78ac, type: 3}
+      propertyPath: coinPrefab
+      value: 
+      objectReference: {fileID: 6304821386139726524, guid: f28fcdc8728445444a1beccef617947a, type: 3}
+    - target: {fileID: 6005209353675424119, guid: cab54508aae841942bdf4e6ca03b78ac, type: 3}
+      propertyPath: healthFill
+      value: 
+      objectReference: {fileID: 1219717713}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
