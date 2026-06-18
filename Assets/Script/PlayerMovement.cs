@@ -68,7 +68,7 @@ public class PlayerMovement : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f);
         
-        isDashing=false;
+        isTakingDamage=false; //原本是isDashing,应该是写错了
     }
 
     public void isDamage()
@@ -90,7 +90,7 @@ public class PlayerMovement : MonoBehaviour
         // 动画同步：每帧将落地状态同步给动画机（方便做空中/落地判定）
         if (anim != null) anim.SetBool("isGrounded", isGrounded);
 
-        if(isDashing)
+        if(isDashing || isTakingDamage) //增加了isTakingDamage也会直接阻止玩家操作
         {
             return;
         }
@@ -173,6 +173,12 @@ public class PlayerMovement : MonoBehaviour
         {
             canDash=false;
             StartCoroutine(Dash());
+        }
+
+        // 每幀把剛體當前的 Y 軸速度傳給狀態機，用來鎖死第一段跳躍
+        if (anim != null)
+        {
+            anim.SetFloat("yVelocity", rb.velocity.y);
         }
     }
 }
