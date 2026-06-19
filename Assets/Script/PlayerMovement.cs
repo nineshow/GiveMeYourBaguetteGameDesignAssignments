@@ -163,7 +163,7 @@ public class PlayerMovement : MonoBehaviour
 
         if(isGrounded)
         {
-            canDash=true;
+            
             isGliding=false;
         }
 
@@ -173,6 +173,7 @@ public class PlayerMovement : MonoBehaviour
         {
             canDash=false;
             StartCoroutine(Dash());
+            canDash=true;
         }
 
         // 每幀把剛體當前的 Y 軸速度傳給狀態機，用來鎖死第一段跳躍
