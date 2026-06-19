@@ -15,7 +15,7 @@ public class PlayerCombat : MonoBehaviour
     void Start()
     {
         // 【新增】：游戏开始时获取角色身上的 Animator 组件
-        anim = GetComponent<Animator>();
+        anim = GetComponentInChildren<Animator>();
     }
 
     void Update()

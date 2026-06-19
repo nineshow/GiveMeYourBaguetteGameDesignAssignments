@@ -60,7 +60,11 @@ public class HealthPoint : MonoBehaviour
         }
         if(gameObject.CompareTag("Player") )
         {
-            movement.isDamage();
+            // 【新增安全检查】：确保拿到了玩家移动脚本再调用，防止怪物挨打时报错
+            if (movement != null) 
+            {
+                movement.isDamage();
+            }
         }
         
 

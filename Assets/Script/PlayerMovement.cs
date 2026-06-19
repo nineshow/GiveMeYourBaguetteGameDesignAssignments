@@ -32,18 +32,15 @@ public class PlayerMovement : MonoBehaviour
     private bool canDash=true;
 
     private bool isGliding;
-
     private bool isTakingDamage;
 
-    // 【新增 1】：声明动画控制器
     private Animator anim; 
+    private PlayerCombat combatScript; 
 
-    // IEnumerator for Coroutine function
     System.Collections.IEnumerator Dash()
     {
         isDashing=true;
 
-        // 【新增 2】：告诉动画机开始冲刺
         if (anim != null) anim.SetBool("isDashing", true);
 
         float originalGravity=rb.gravityScale;
@@ -58,21 +55,22 @@ public class PlayerMovement : MonoBehaviour
         rb.gravityScale=originalGravity;
         isDashing=false;
 
-        // 【新增 3】：告诉动画机结束冲刺
         if (anim != null) anim.SetBool("isDashing", false);
     }
 
     System.Collections.IEnumerator Hurt()
     {
         isTakingDamage=true;
-
         yield return new WaitForSeconds(0.5f);
-        
-        isTakingDamage=false; //原本是isDashing,应该是写错了
+        isTakingDamage=false; 
     }
 
     public void isDamage()
     {
+        if (anim != null) 
+        {
+            anim.SetTrigger("Hurt");
+        }
         StartCoroutine(Hurt());
     }
 
@@ -80,21 +78,15 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         jumpsRemaining=maxJumps;
-
-        // 【新增 4】：获取动画组件
         anim = GetComponentInChildren<Animator>();
+        combatScript = GetComponent<PlayerCombat>();
     }
 
     void Update()
     {
-        // 动画同步：每帧将落地状态同步给动画机（方便做空中/落地判定）
-        if (anim != null) anim.SetBool("isGrounded", isGrounded);
-
-        if(isDashing || isTakingDamage) //增加了isTakingDamage也会直接阻止玩家操作
-        {
-            return;
-        }
-
+        // ==========================================
+        // 第一步：不管什么状态，永远优先检测是否落地！
+        // ==========================================
         isGrounded = Physics2D.OverlapCircle(
             groundCheck.position,
             0.2f,
@@ -104,35 +96,74 @@ public class PlayerMovement : MonoBehaviour
         if(isGrounded && !standing)
         {
             jumpsRemaining=maxJumps;
+            canDash=true; // 落地恢复冲刺
         }
         standing=isGrounded;
 
+        // 实时同步基础动画状态
+        if (anim != null) 
+        {
+            anim.SetBool("isGrounded", isGrounded);
+            anim.SetFloat("yVelocity", rb.velocity.y);
+        }
+
+        // ==========================================
+        // 第二步：特殊状态拦截（冲刺、挨打、防御）
+        // ==========================================
+        if(isDashing) 
+        {
+            return; // 冲刺状态全权由协程接管，无需干涉
+        }
+
+        if(isTakingDamage || (combatScript != null && combatScript.isDefending))
+        {
+            // 【核心修复】：紧急刹车！把水平速度清零，垂直速度保持（该掉下来还是得掉下来）
+            rb.velocity = new Vector2(0f, rb.velocity.y);
+            
+            // 强行恢复正常重力（防止滑翔时防御导致一直飘在空中）
+            rb.gravityScale = normalGravity;
+            isGliding = false;
+
+            // 强制关闭奔跑和滑翔的动画开关
+            if (anim != null)
+            {
+                anim.SetBool("isRunning", false);
+                anim.SetBool("isGliding", false);
+            }
+
+            return; // 刹停之后直接结束这一帧，不再读取按键移动
+        }
+
+        // ==========================================
+        // 第三步：正常的移动、跳跃、滑翔逻辑
+        // ==========================================
         float moveInput = Input.GetAxisRaw("Horizontal");
 
-        // 【修改】：加入了 transform.localScale 翻转逻辑，解决太空步问题
         if(moveInput>0)
         {
             facingDirection=1;
-            transform.localScale = new Vector3(1, 1, 1); // 面朝右
+            transform.localScale = new Vector3(1, 1, 1); 
         }
         else if(moveInput<0)
         {
             facingDirection=-1;
-            transform.localScale = new Vector3(-1, 1, 1); // 面朝左
+            transform.localScale = new Vector3(-1, 1, 1); 
         }
 
+        // 赋予正常的移动速度
         rb.velocity = new Vector2(
             moveInput * moveSpeed,
             rb.velocity.y
         );
 
-        // 【新增 5】：跑步动画控制
+        // 同步跑步动画
         if (anim != null)
         {
             bool isMoving = Mathf.Abs(moveInput) > 0f;
             anim.SetBool("isRunning", isMoving);
         }
 
+        // 跳跃检测
         if(Input.GetKeyDown(KeyCode.Space) && jumpsRemaining>0)
         {
             rb.velocity = new Vector2(
@@ -141,13 +172,11 @@ public class PlayerMovement : MonoBehaviour
             );
             jumpsRemaining--;
 
-            // 【新增 6】：触发跳跃动画
             if (anim != null) anim.SetTrigger("Jump");
         }
 
-        if(Input.GetKey(KeyCode.L)
-           && rb.velocity.y < 0
-           && !isGrounded)
+        // 滑翔检测
+        if(Input.GetKey(KeyCode.L) && rb.velocity.y < 0 && !isGrounded)
         {
             rb.gravityScale = glideGravity;
             isGliding=true;
@@ -158,28 +187,14 @@ public class PlayerMovement : MonoBehaviour
             isGliding=false;
         }
         
-        // 【新增 7】：滑翔动画控制
         if (anim != null) anim.SetBool("isGliding", isGliding);
 
-        if(isGrounded)
-        {
-            
-            isGliding=false;
-        }
-
-        if(Input.GetKeyDown(KeyCode.LeftShift) 
-        && !isDashing
-        && canDash)
+        // 冲刺检测
+        if(Input.GetKeyDown(KeyCode.LeftShift) && !isDashing && canDash)
         {
             canDash=false;
             StartCoroutine(Dash());
             canDash=true;
-        }
-
-        // 每幀把剛體當前的 Y 軸速度傳給狀態機，用來鎖死第一段跳躍
-        if (anim != null)
-        {
-            anim.SetFloat("yVelocity", rb.velocity.y);
         }
     }
 }
