@@ -101,7 +101,7 @@ public class InventoryManager : MonoBehaviour
 
    private void UpdateUI()
     {
-        if (goldText != null) goldText.text = "Gold: " + gold.ToString();
+        if (goldText != null) goldText.text = gold.ToString();
         
         // 【修改】：只显示纯数字，赋值给你右下角的文本
         if (potionQuantityText != null) 
