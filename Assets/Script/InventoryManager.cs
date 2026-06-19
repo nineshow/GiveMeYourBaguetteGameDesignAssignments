@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class InventoryManager : MonoBehaviour
 {
@@ -15,7 +16,7 @@ public class InventoryManager : MonoBehaviour
 
     [Header("UI Elements(Always Visible)")]
     public Text goldText;
-    public Text potionText; // New text for potions
+    public TextMeshProUGUI potionQuantityText;
     public Button usePotionButton;  
 
     [Header("Inventory Settings (Tab Panel)")]
@@ -98,10 +99,15 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    private void UpdateUI()
+   private void UpdateUI()
     {
         if (goldText != null) goldText.text = "Gold: " + gold.ToString();
-        if (potionText != null) potionText.text = "Potions: " + potionCount.ToString();
+        
+        // 【修改】：只显示纯数字，赋值给你右下角的文本
+        if (potionQuantityText != null) 
+        {
+            potionQuantityText.text = potionCount.ToString();
+        }
     }
 
     private void ToggleInventory()
