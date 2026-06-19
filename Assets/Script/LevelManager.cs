@@ -34,4 +34,19 @@ public class LevelManager : MonoBehaviour
         int currentLevelID=SceneManager.GetActiveScene().buildIndex;
         SceneManager.LoadScene(currentLevelID);
     }
+
+    void Update()
+    {
+        //for testing
+        
+        if(Input.GetKeyDown(KeyCode.N))
+        {
+            LoadNextLevel(1);
+        }
+
+        if(Input.GetKeyDown(KeyCode.R))
+        {
+            RestartLevel();
+        }
+    }
 }

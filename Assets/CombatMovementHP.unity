@@ -1721,6 +1721,7 @@ GameObject:
   - component: {fileID: 1831742879}
   - component: {fileID: 1831742878}
   - component: {fileID: 1831742880}
+  - component: {fileID: 1831742881}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -1784,6 +1785,18 @@ MonoBehaviour:
     title: Rotten to the Core
     description: Even prince's kiss won't save Snow White
     unlocked: 0
+--- !u!114 &1831742881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1831742877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c4dd909a6f5ea34ba56b0bc335da4dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1962462787
 GameObject:
   m_ObjectHideFlags: 0
@@ -2081,7 +2094,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2076284348384011287, guid: cab54508aae841942bdf4e6ca03b78ac, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4502103017944235759, guid: cab54508aae841942bdf4e6ca03b78ac, type: 3}
       propertyPath: m_LocalScale.x
