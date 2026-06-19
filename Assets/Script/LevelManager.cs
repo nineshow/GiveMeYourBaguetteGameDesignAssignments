@@ -38,7 +38,7 @@ public class LevelManager : MonoBehaviour
     void Update()
     {
         //for testing
-        
+
         if(Input.GetKeyDown(KeyCode.N))
         {
             LoadNextLevel(1);

@@ -194,6 +194,7 @@ public class PlayerMovement : MonoBehaviour
         {
             canDash=false;
             StartCoroutine(Dash());
+            canDash=true;
         }
     }
 }
