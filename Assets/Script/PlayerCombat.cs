@@ -28,6 +28,7 @@ public class PlayerCombat : MonoBehaviour
         {
             anim.SetBool("isDefending", isDefending);
         }
+
     }
 
     // to get the reduction percent
