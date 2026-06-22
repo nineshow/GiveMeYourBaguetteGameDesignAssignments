@@ -15,7 +15,7 @@ public class InventoryManager : MonoBehaviour
     public int healAmount = 30;
 
     [Header("UI Elements(Always Visible)")]
-    public Text goldText;
+    public TextMeshProUGUI goldText;
     public TextMeshProUGUI potionQuantityText;
     public Button usePotionButton;  
 
@@ -116,7 +116,7 @@ public class InventoryManager : MonoBehaviour
         if (inventoryPanel != null) inventoryPanel.SetActive(isInventoryOpen);
     }
 
-    public void PickupItem(ItemType itemType, int amount = 1, string achievementID = null)
+    public void PickupItem(ItemType itemType,   int amount = 1, string achievementID = null)
 {
     switch (itemType)
     {
