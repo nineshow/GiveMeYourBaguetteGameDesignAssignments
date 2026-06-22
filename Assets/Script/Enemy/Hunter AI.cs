@@ -29,6 +29,8 @@ public class HunterAI : MonoBehaviour
     private Vector2 startPosition;    
     private Vector2 patrolTarget;
 
+    private Animator anim;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -39,10 +41,19 @@ public class HunterAI : MonoBehaviour
         if (p != null) player = p.transform;
 
         attackTimer = 0f; // 游戏刚开始时，武器是装填好的，可以随时进入前摇
+        anim = GetComponentInChildren<Animator>();
     }
 
     void Update()
     {
+        // 【新增 3】：在 Update 的最开头，实时同步行走动画
+        if (anim != null)
+        {
+            // 只要 X 轴速度的绝对值大于 0.1，就认为在走路
+            bool isMoving = Mathf.Abs(rb.velocity.x) > 0.1f;
+            anim.SetBool("isWalking", isMoving);
+        }
+
         if (player == null || !player.gameObject.activeInHierarchy) 
         {
             CancelAttackPreparation();
@@ -74,7 +85,8 @@ public class HunterAI : MonoBehaviour
                     isPreparingAttack = true;
                     windUpTimer = windUpTime; // 重置 0.5 秒倒计时
                     
-                    // 💡 提示：以后如果你加了动画，可以在这里播放“举枪/瞄准”的动画
+                   // 【新增 4】：进入前摇瞬间，告诉状态机开始播放“举枪瞄准”动画
+                    if (anim != null) anim.SetBool("isShooting", true);
                 }
 
                 // 前摇倒计时
@@ -85,6 +97,7 @@ public class HunterAI : MonoBehaviour
                     // 0.5秒时间到，正式开火！
                     ShotgunAttack();
                     isPreparingAttack = false; // 结束前摇状态
+                    if (anim != null) anim.SetBool("isShooting", false);
                 }
             }
         }
@@ -114,6 +127,8 @@ public class HunterAI : MonoBehaviour
         if (isPreparingAttack)
         {
             isPreparingAttack = false;
+            // 【新增 5】：如果玩家逃出范围，立刻取消“举枪瞄准”动画，恢复正常
+            if (anim != null) anim.SetBool("isShooting", false);
         }
     }
 

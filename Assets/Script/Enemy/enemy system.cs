@@ -20,6 +20,9 @@ public class EnemyAI : MonoBehaviour
     
     private float attackTimer;        // 攻击计时器
 
+    // 【新增 1】：声明动画控制器
+    private Animator anim;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -37,10 +40,21 @@ public class EnemyAI : MonoBehaviour
 
         // 初始化计时器
         attackTimer = attackCooldown; 
+
+        // 【新增 2】：获取小怪身上的 Animator
+        anim = GetComponentInChildren<Animator>();
     }
 
     void Update()
     {
+        // 【新增 3】：实时同步小怪的“行走”动画
+        if (anim != null)
+        {
+            // 只要 X 轴速度的绝对值大于 0.1，就认为它在走路
+            bool isMoving = Mathf.Abs(rb.velocity.x) > 0.1f;
+            anim.SetBool("isWalking", isMoving);
+        }
+
         // 如果玩家不存在或者玩家已经死亡（隐藏了），怪物就乖乖回去巡逻
         if (player == null || !player.gameObject.activeInHierarchy)
         {
@@ -106,7 +120,6 @@ public class EnemyAI : MonoBehaviour
     }
 
     // --- 状态 3：攻击 ---
-    // --- 状态 3：攻击 ---
     void AttackPlayer()
     {
         // 站在原地打人，停止移动
@@ -121,25 +134,24 @@ public class EnemyAI : MonoBehaviour
         
         if (attackTimer <= 0f)
         {
+            // 【新增 4】：时间到了，立刻触发“攻击”动画！
+            if (anim != null)
+            {
+                anim.SetTrigger("Attack");
+            }
+
             // 获取玩家身上的生命组件和战斗组件
             HealthPoint hp = player.GetComponent<HealthPoint>();
-            PlayerCombat combat = player.GetComponent<PlayerCombat>(); // 【新增】：侦测玩家的防御状态
+            PlayerCombat combat = player.GetComponent<PlayerCombat>();
 
             if (hp != null)
             {
-                // 怪物发动攻击，传入基础伤害
-                // (最终扣多少血依然由 HealthPoint 里你写的 Mathf.RoundToInt 完美接管)
                 hp.TakeDamage(attackDamage);
 
-                // 根据玩家的防御状态，输出不同的反馈
                 if (combat != null && combat.isDefending)
                 {
-                    // 计算出实际伤害用于控制台显示（和你在 HealthPoint 里的算法一致）
                     int realDamage = Mathf.RoundToInt(attackDamage * combat.GetDamageMultiplier());
                     Debug.Log("玩家格挡成功，受到了 " + realDamage + " 点伤害");
-                    
-                    // 【进阶玩法】：如果玩家防住了，你可以让怪物往后退一点（弹刀效果）
-                    // rb.AddForce(new Vector2(-direction * 5f, 0), ForceMode2D.Impulse); 
                 }
                 else
                 {
@@ -161,13 +173,12 @@ public class EnemyAI : MonoBehaviour
             transform.localScale = new Vector3(-1, 1, 1);
     }
 
-    // --- 辅助方法：在 Unity 编辑器中画出检测圈，方便你调整数值 ---
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, detectionRange); // 黄圈：视野范围
+        Gizmos.DrawWireSphere(transform.position, detectionRange); 
         
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, attackRange);    // 红圈：攻击范围
+        Gizmos.DrawWireSphere(transform.position, attackRange);    
     }
 }
