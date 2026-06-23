@@ -27,6 +27,19 @@ public class GuideManager : MonoBehaviour
         }
     }
 
+
+    void Start()
+    {
+        if(guidePanel != null)
+        {
+            guidePanel.SetActive(false);
+        }
+        else
+        {
+            Debug.LogWarning("Guide panel is not assigned.");
+        }
+    }
+    
     public void ShowGuide(int guideIndex)
     {
         if(guideIndex < 0 || guideIndex >= guides.Count)
