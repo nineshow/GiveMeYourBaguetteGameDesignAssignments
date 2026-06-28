@@ -18,6 +18,11 @@ public class EnemyAI : MonoBehaviour
     public float attackWindUp = 0.2f; // 【核心】：攻击前摇（从播放动画到扣血之间的延迟时间）
     private bool isAttacking = false; // 状态锁：判断小怪是否正在砍人
 
+    // 【新增】：音效设置面板
+    [Header("Audio Settings")]
+    public AudioSource audioSource;   // 播放声音的“扬声器”
+    public AudioClip attackSound;     // 小怪攻击的音效文件
+
     private Vector2 startPosition;    // 记录怪物出生的初始位置
     private Vector2 patrolTarget;     // 当前正在朝哪个点巡逻
     private Transform player;         // 玩家的坐标引用
@@ -135,7 +140,7 @@ public class EnemyAI : MonoBehaviour
             isAttacking = true; // 核心防重播机制：立刻上锁
             StartCoroutine(PerformAttack());
         }
-    } // 👈 之前這裡漏掉了閉合大括號，現在補上了！
+    } 
 
     // 【攻击协程】
     IEnumerator PerformAttack()
@@ -146,6 +151,13 @@ public class EnemyAI : MonoBehaviour
         {
             anim.SetBool("isWalking", false); 
             anim.SetTrigger("Attack"); // 触发攻击动画
+        }
+
+        // 【核心新增】：播放打断式攻击音效
+        if (audioSource != null && attackSound != null)
+        {
+            audioSource.clip = attackSound; // 将音效装填进扬声器
+            audioSource.Play();             // 使用 Play() 会立刻切断之前的声音并重新播放
         }
 
         yield return new WaitForSeconds(attackWindUp);
