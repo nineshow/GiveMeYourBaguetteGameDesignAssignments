@@ -106,5 +106,10 @@ public class HealthPoint : MonoBehaviour
             Instantiate(coinPrefab, transform.position, Quaternion.identity);
             Destroy(gameObject);
         }
+        else
+        {
+            LevelManager.Instance.gameOverPanel.SetActive(true);
+            LevelManager.Instance.PauseGame();
+        }
     }
 }
