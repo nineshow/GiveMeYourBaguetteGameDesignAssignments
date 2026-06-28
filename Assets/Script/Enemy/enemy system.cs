@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections; // 【必须引入】：为了使用协程
 
 public class EnemyAI : MonoBehaviour
 {
@@ -12,6 +13,10 @@ public class EnemyAI : MonoBehaviour
     public float attackRange = 1.2f;  // 攻击范围（玩家进入这个半径准备攻击）
     public int attackDamage = 10;     // 怪物每次攻击的伤害值
     public float attackCooldown = 1f; // 攻击间隔（也是进入范围后的延迟时间）
+
+    [Header("动画节奏(新)")]
+    public float attackWindUp = 0.2f; // 【核心】：攻击前摇（从播放动画到扣血之间的延迟时间）
+    private bool isAttacking = false; // 状态锁：判断小怪是否正在砍人
 
     private Vector2 startPosition;    // 记录怪物出生的初始位置
     private Vector2 patrolTarget;     // 当前正在朝哪个点巡逻
@@ -47,6 +52,12 @@ public class EnemyAI : MonoBehaviour
 
     void Update()
     {
+       // 【核心拦截】：如果小怪正在砍人，锁死它的大脑，不允许它移动或转身！
+        if (isAttacking)
+        {
+            return; 
+        }
+       
         // 【新增 3】：实时同步小怪的“行走”动画
         if (anim != null)
         {
@@ -122,25 +133,38 @@ public class EnemyAI : MonoBehaviour
     // --- 状态 3：攻击 ---
     void AttackPlayer()
     {
-        // 站在原地打人，停止移动
         rb.velocity = new Vector2(0, rb.velocity.y);
-        
-        // 脸一定要朝向玩家
         float direction = (player.position.x > transform.position.x) ? 1f : -1f;
         FlipTowards(direction);
 
-        // 开始倒计时
         attackTimer -= Time.deltaTime;
         
         if (attackTimer <= 0f)
         {
-            // 【新增 4】：时间到了，立刻触发“攻击”动画！
-            if (anim != null)
-            {
-                anim.SetTrigger("Attack");
-            }
+            // 时间到了，启动攻击协程！
+            StartCoroutine(PerformAttack());
+        }
+    }
 
-            // 获取玩家身上的生命组件和战斗组件
+    // 【全新重写的攻击协程】
+    IEnumerator PerformAttack()
+    {
+        // 1. 上锁！彻底刹车，强行关闭行走动画
+        isAttacking = true;
+        rb.velocity = new Vector2(0, rb.velocity.y); 
+        
+        if (anim != null)
+        {
+            anim.SetBool("isWalking", false); 
+            anim.SetTrigger("Attack"); // 触发攻击动作
+        }
+
+        // 2. 等待“前摇”时间（也就是让动画飞刀或砍下的时间）
+        yield return new WaitForSeconds(attackWindUp);
+
+        // 3. 伤害判定：加了一个防逃课机制，如果在这 0.3 秒内玩家用位移闪出了范围，就不扣血（空刀）
+        if (player != null && Vector2.Distance(transform.position, player.position) <= attackRange + 0.5f)
+        {
             HealthPoint hp = player.GetComponent<HealthPoint>();
             PlayerCombat combat = player.GetComponent<PlayerCombat>();
 
@@ -158,10 +182,11 @@ public class EnemyAI : MonoBehaviour
                     Debug.Log("怪物造成了 " + attackDamage + " 点伤害");
                 }
             }
-            
-            // 重新把计时器设为攻击间隔，准备下一次攻击
-            attackTimer = attackCooldown; 
         }
+
+        // 4. 攻击完毕，重新进入发呆冷却期
+        attackTimer = attackCooldown; 
+        isAttacking = false; // 解锁，允许再次行动
     }
 
     // --- 辅助方法：翻转怪物贴图 ---

@@ -17,7 +17,7 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    public void LoadNextLevel(int nextSceneID)
+    public void LoadLevel(int nextSceneID)
     {
         //check if scene exist first
         if(nextSceneID<0||nextSceneID>= UnityEngine.
@@ -31,22 +31,17 @@ public class LevelManager : MonoBehaviour
 
     public void RestartLevel()
     {
-        int currentLevelID=SceneManager.GetActiveScene().buildIndex;
+        int currentLevelID=GetCurrentLevelID();
         SceneManager.LoadScene(currentLevelID);
+    }
+
+    public int GetCurrentLevelID()
+    {
+        return SceneManager.GetActiveScene().buildIndex;
     }
 
     void Update()
     {
-        //for testing
-
-        if(Input.GetKeyDown(KeyCode.N))
-        {
-            LoadNextLevel(1);
-        }
-
-        if(Input.GetKeyDown(KeyCode.R))
-        {
-            RestartLevel();
-        }
+        
     }
 }
