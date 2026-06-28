@@ -2746,113 +2746,28 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1807829919}
   m_CullTransparentMesh: 1
---- !u!1 &1831742877
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1831742879}
-  - component: {fileID: 1831742878}
-  - component: {fileID: 1831742880}
-  - component: {fileID: 1831742881}
-  - component: {fileID: 1831742882}
-  m_Layer: 0
-  m_Name: Game Manager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1831742878
+--- !u!114 &1831742878 stripped
 MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 5073644232014603932, guid: 2ec805d3f9ed4844aba4877d894b335d, type: 3}
+  m_PrefabInstance: {fileID: 6297120163635026422}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1831742877}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 960547bccd996064aa18947198e72a33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gold: 30
-  potionCount: 0
-  potionPrice: 20
-  healAmount: 30
-  goldText: {fileID: 1212375337}
-  potionQuantityText: {fileID: 2025605152}
-  usePotionButton: {fileID: 0}
-  inventoryPanel: {fileID: 579886637}
---- !u!4 &1831742879
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1831742877}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.206584, y: -0.90030026, z: 0.024138726}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1831742880
+--- !u!114 &1831742881 stripped
 MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 7487084990125303303, guid: 2ec805d3f9ed4844aba4877d894b335d, type: 3}
+  m_PrefabInstance: {fileID: 6297120163635026422}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1831742877}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 105375cc79a3789479193b94e6c0ef6c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  achievements:
-  - id: FALL
-    title: Opps......I Slipped
-    description: Newton sure didn't like me
-    unlocked: 0
-  - id: BADAPPLE
-    title: Rotten to the Core
-    description: Even prince's kiss won't save Snow White
-    unlocked: 0
---- !u!114 &1831742881
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1831742877}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8c4dd909a6f5ea34ba56b0bc335da4dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameOverPanel: {fileID: 640067716}
-  pausePanel: {fileID: 564200074}
---- !u!114 &1831742882
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1831742877}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 42a94a02c4170294aa1b9248812170c1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  guides:
-  - Press J to Attack
-  - Press Space to Jump
-  guidePanel: {fileID: 527839426}
-  guideText: {fileID: 934672084}
 --- !u!1 &1907100070
 GameObject:
   m_ObjectHideFlags: 0
@@ -3591,6 +3506,91 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f28fcdc8728445444a1beccef617947a, type: 3}
+--- !u!1001 &6297120163635026422
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4602895530218296333, guid: 2ec805d3f9ed4844aba4877d894b335d, type: 3}
+      propertyPath: guideText
+      value: 
+      objectReference: {fileID: 934672084}
+    - target: {fileID: 4602895530218296333, guid: 2ec805d3f9ed4844aba4877d894b335d, type: 3}
+      propertyPath: guidePanel
+      value: 
+      objectReference: {fileID: 527839426}
+    - target: {fileID: 4822840740298385499, guid: 2ec805d3f9ed4844aba4877d894b335d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.206584
+      objectReference: {fileID: 0}
+    - target: {fileID: 4822840740298385499, guid: 2ec805d3f9ed4844aba4877d894b335d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.90030026
+      objectReference: {fileID: 0}
+    - target: {fileID: 4822840740298385499, guid: 2ec805d3f9ed4844aba4877d894b335d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.024138726
+      objectReference: {fileID: 0}
+    - target: {fileID: 4822840740298385499, guid: 2ec805d3f9ed4844aba4877d894b335d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4822840740298385499, guid: 2ec805d3f9ed4844aba4877d894b335d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4822840740298385499, guid: 2ec805d3f9ed4844aba4877d894b335d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4822840740298385499, guid: 2ec805d3f9ed4844aba4877d894b335d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4822840740298385499, guid: 2ec805d3f9ed4844aba4877d894b335d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4822840740298385499, guid: 2ec805d3f9ed4844aba4877d894b335d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4822840740298385499, guid: 2ec805d3f9ed4844aba4877d894b335d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5073644232014603932, guid: 2ec805d3f9ed4844aba4877d894b335d, type: 3}
+      propertyPath: goldText
+      value: 
+      objectReference: {fileID: 1212375337}
+    - target: {fileID: 5073644232014603932, guid: 2ec805d3f9ed4844aba4877d894b335d, type: 3}
+      propertyPath: inventoryPanel
+      value: 
+      objectReference: {fileID: 579886637}
+    - target: {fileID: 5073644232014603932, guid: 2ec805d3f9ed4844aba4877d894b335d, type: 3}
+      propertyPath: potionQuantityText
+      value: 
+      objectReference: {fileID: 2025605152}
+    - target: {fileID: 7487084990125303303, guid: 2ec805d3f9ed4844aba4877d894b335d, type: 3}
+      propertyPath: pausePanel
+      value: 
+      objectReference: {fileID: 564200074}
+    - target: {fileID: 7487084990125303303, guid: 2ec805d3f9ed4844aba4877d894b335d, type: 3}
+      propertyPath: gameOverPanel
+      value: 
+      objectReference: {fileID: 640067716}
+    - target: {fileID: 8880538865483323565, guid: 2ec805d3f9ed4844aba4877d894b335d, type: 3}
+      propertyPath: m_Name
+      value: Game Manager
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2ec805d3f9ed4844aba4877d894b335d, type: 3}
 --- !u!1001 &6527023413115498860
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3716,7 +3716,7 @@ SceneRoots:
   - {fileID: 519420032}
   - {fileID: 5738595806880287253}
   - {fileID: 555222849}
-  - {fileID: 1831742879}
+  - {fileID: 6297120163635026422}
   - {fileID: 1101809900}
   - {fileID: 177100207}
   - {fileID: 1567286632}
