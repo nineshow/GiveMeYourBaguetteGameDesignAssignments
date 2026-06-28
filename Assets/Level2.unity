@@ -520,6 +520,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6295673197584347179, guid: 81ea6ee94073c6344a1979b4efc6608d, type: 3}
+      propertyPath: coinPrefab
+      value: 
+      objectReference: {fileID: 6304821386139726524, guid: f28fcdc8728445444a1beccef617947a, type: 3}
+    - target: {fileID: 6295673197584347179, guid: 81ea6ee94073c6344a1979b4efc6608d, type: 3}
+      propertyPath: healthFill
+      value: 
+      objectReference: {fileID: 1182841456}
     - target: {fileID: 152291255017663829, guid: cab54508aae841942bdf4e6ca03b78ac, type: 3}
       propertyPath: m_Name
       value: Player
@@ -576,11 +584,11 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 677857652}
-    - target: {fileID: 6295673197584347179, guid: 81ea6ee94073c6344a1979b4efc6608d, type: 3}
+    - target: {fileID: 6005209353675424119, guid: cab54508aae841942bdf4e6ca03b78ac, type: 3}
       propertyPath: coinPrefab
       value: 
       objectReference: {fileID: 6304821386139726524, guid: f28fcdc8728445444a1beccef617947a, type: 3}
-    - target: {fileID: 6295673197584347179, guid: 81ea6ee94073c6344a1979b4efc6608d, type: 3}
+    - target: {fileID: 6005209353675424119, guid: cab54508aae841942bdf4e6ca03b78ac, type: 3}
       propertyPath: healthFill
       value: 
       objectReference: {fileID: 1182841456}
@@ -1660,5 +1668,6 @@ SceneRoots:
   - {fileID: 678160902}
   - {fileID: 1997031474}
   - {fileID: 1526945169}
-  - {fileID: 1981362570}
-  - {fileID: 423147854}
+  - {fileID: 677857651}
+  - {fileID: 1587594635}
+  - {fileID: 1921820498}
