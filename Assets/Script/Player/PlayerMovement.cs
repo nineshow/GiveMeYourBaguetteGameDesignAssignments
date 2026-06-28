@@ -16,6 +16,12 @@ public class PlayerMovement : MonoBehaviour
     public Transform groundCheck;
     public LayerMask groundLayer;
 
+    // 【新增】：音效设置面板
+    [Header("Audio Settings")]
+    public AudioSource audioSource; // 播放声音的“扬声器”
+    public AudioClip jumpSound;     // 跳跃音效
+    public AudioClip dashSound;     // 冲刺音效
+
     private Rigidbody2D rb;
     private bool isGrounded;
 
@@ -107,7 +113,7 @@ public class PlayerMovement : MonoBehaviour
         if(isGrounded && !standing)
         {
             jumpsRemaining=maxJumps;
-            canDash=true; // 落地恢复冲刺
+            canDash=true; 
         }
         standing=isGrounded;
 
@@ -128,10 +134,10 @@ public class PlayerMovement : MonoBehaviour
 
         if(isTakingDamage || (combatScript != null && combatScript.isDefending))
         {
-            // 【核心修复】：紧急刹车！把水平速度清零，垂直速度保持（该掉下来还是得掉下来）
+            // 紧急刹车！把水平速度清零，垂直速度保持
             rb.velocity = new Vector2(0f, rb.velocity.y);
             
-            // 强行恢复正常重力（防止滑翔时防御导致一直飘在空中）
+            // 强行恢复正常重力
             rb.gravityScale = normalGravity;
             isGliding = false;
 
@@ -184,6 +190,12 @@ public class PlayerMovement : MonoBehaviour
             jumpsRemaining--;
 
             if (anim != null) anim.SetTrigger("Jump");
+
+            // 【音效】：播放跳跃音效
+            if (audioSource != null && jumpSound != null)
+            {
+                audioSource.PlayOneShot(jumpSound);
+            }
         }
 
         // 滑翔检测
@@ -204,72 +216,81 @@ public class PlayerMovement : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.LeftShift) && !isDashing && canDash)
         {
             canDash=false;
+
+            // 【音效】：播放冲刺音效
+            if (audioSource != null && dashSound != null)
+            {
+                audioSource.PlayOneShot(dashSound);
+            }
+
             StartCoroutine(Dash());
+            
+            // 【还原你的机制】：保留了这里的 canDash = true; 实现你要的冲刺效果
             canDash=true;
         }
     }
 
     private void LateUpdate()
-{
-    if (!boundsCalculated)
     {
-        CalculatePlayerBounds();
+        if (!boundsCalculated)
+        {
+            CalculatePlayerBounds();
+        }
+
+        KeepPlayerInsideMap();
     }
 
-    KeepPlayerInsideMap();
-}
-
-private void CalculatePlayerBounds()
-{
-    if (mapSprite == null)
+    private void CalculatePlayerBounds()
     {
-        return;
+        if (mapSprite == null)
+        {
+            return;
+        }
+
+        if (playerSprite == null)
+        {
+            playerSprite = GetComponentInChildren<SpriteRenderer>();
+        }
+
+        Bounds mapBounds = mapSprite.bounds;
+
+        float playerHalfWidth = 0f;
+        float playerHalfHeight = 0f;
+
+        if (playerSprite != null)
+        {
+            playerHalfWidth = playerSprite.bounds.extents.x;
+            playerHalfHeight = playerSprite.bounds.extents.y;
+        }
+
+        minX = mapBounds.min.x + playerHalfWidth;
+        maxX = mapBounds.max.x - playerHalfWidth;
+
+        minY = mapBounds.min.y + playerHalfHeight;
+        maxY = mapBounds.max.y - playerHalfHeight;
+
+        boundsCalculated = true;
     }
 
-    if (playerSprite == null)
+    private void KeepPlayerInsideMap()
     {
-        playerSprite = GetComponentInChildren<SpriteRenderer>();
+        if (mapSprite == null)
+        {
+            return;
+        }
+
+        float clampedX = Mathf.Clamp(transform.position.x, minX, maxX);
+        float clampedY = transform.position.y;
+
+        if (clampY)
+        {
+            clampedY = Mathf.Clamp(transform.position.y, minY, maxY);
+        }
+
+        transform.position = new Vector3(
+            clampedX,
+            clampedY,
+            transform.position.z
+        );
     }
-
-    Bounds mapBounds = mapSprite.bounds;
-
-    float playerHalfWidth = 0f;
-    float playerHalfHeight = 0f;
-
-    if (playerSprite != null)
-    {
-        playerHalfWidth = playerSprite.bounds.extents.x;
-        playerHalfHeight = playerSprite.bounds.extents.y;
-    }
-
-    minX = mapBounds.min.x + playerHalfWidth;
-    maxX = mapBounds.max.x - playerHalfWidth;
-
-    minY = mapBounds.min.y + playerHalfHeight;
-    maxY = mapBounds.max.y - playerHalfHeight;
-
-    boundsCalculated = true;
-}
-
-private void KeepPlayerInsideMap()
-{
-    if (mapSprite == null)
-    {
-        return;
-    }
-
-    float clampedX = Mathf.Clamp(transform.position.x, minX, maxX);
-    float clampedY = transform.position.y;
-
-    if (clampY)
-    {
-        clampedY = Mathf.Clamp(transform.position.y, minY, maxY);
-    }
-
-    transform.position = new Vector3(
-        clampedX,
-        clampedY,
-        transform.position.z
-    );
-}
 }

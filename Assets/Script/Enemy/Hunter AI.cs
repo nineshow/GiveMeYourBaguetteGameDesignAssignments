@@ -23,6 +23,11 @@ public class HunterAI : MonoBehaviour
     private float windUpTimer;           // 前摇倒计时器
     private bool isPreparingAttack = false; // 是否正在举枪瞄准蓄力中
 
+    // 【新增】：音效设置面板
+    [Header("Audio Settings")]
+    public AudioSource audioSource;      // 播放声音的“扬声器”
+    public AudioClip shootSound;         // 霰弹枪开火音效
+
     private Transform player;
     private Rigidbody2D rb;
     private float attackTimer;
@@ -46,7 +51,7 @@ public class HunterAI : MonoBehaviour
 
     void Update()
     {
-        // 【新增 3】：在 Update 的最开头，实时同步行走动画
+        // 在 Update 的最开头，实时同步行走动画
         if (anim != null)
         {
             // 只要 X 轴速度的绝对值大于 0.1，就认为在走路
@@ -85,7 +90,7 @@ public class HunterAI : MonoBehaviour
                     isPreparingAttack = true;
                     windUpTimer = windUpTime; // 重置 0.5 秒倒计时
                     
-                   // 【新增 4】：进入前摇瞬间，告诉状态机开始播放“举枪瞄准”动画
+                   // 进入前摇瞬间，告诉状态机开始播放“举枪瞄准”动画
                     if (anim != null) anim.SetBool("isShooting", true);
                 }
 
@@ -105,7 +110,7 @@ public class HunterAI : MonoBehaviour
         {
             // --- 状态 2：玩家在射程之外 ---
             
-            // 【神级细节】：如果玩家在猎人举枪的 0.5 秒内逃出了蓝圈，立刻取消蓄力（俗称“骗招/拉扯”）
+            // 如果玩家在猎人举枪的 0.5 秒内逃出了蓝圈，立刻取消蓄力
             CancelAttackPreparation();
 
             if (distance <= detectionRange)
@@ -127,7 +132,7 @@ public class HunterAI : MonoBehaviour
         if (isPreparingAttack)
         {
             isPreparingAttack = false;
-            // 【新增 5】：如果玩家逃出范围，立刻取消“举枪瞄准”动画，恢复正常
+            // 如果玩家逃出范围，立刻取消“举枪瞄准”动画，恢复正常
             if (anim != null) anim.SetBool("isShooting", false);
         }
     }
@@ -179,6 +184,13 @@ public class HunterAI : MonoBehaviour
 
                 }
             }
+        }
+
+        // 【核心新增】：播放打断式射击音效
+        if (audioSource != null && shootSound != null)
+        {
+            audioSource.clip = shootSound; // 将音效装填进扬声器
+            audioSource.Play();            // 立刻切断当前播放并重新爆响
         }
 
         // 后坐力倒退
