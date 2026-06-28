@@ -24,9 +24,7 @@ public class EnemyAI : MonoBehaviour
     private Rigidbody2D rb;
     
     private float attackTimer;        // 攻击计时器
-
-    // 【新增 1】：声明动画控制器
-    private Animator anim;
+    private Animator anim;            // 声明动画控制器
 
     void Start()
     {
@@ -46,7 +44,7 @@ public class EnemyAI : MonoBehaviour
         // 初始化计时器
         attackTimer = attackCooldown; 
 
-        // 【新增 2】：获取小怪身上的 Animator
+        // 获取小怪身上的 Animator
         anim = GetComponentInChildren<Animator>();
     }
 
@@ -58,7 +56,7 @@ public class EnemyAI : MonoBehaviour
             return; 
         }
        
-        // 【新增 3】：实时同步小怪的“行走”动画
+        // 实时同步小怪的“行走”动画
         if (anim != null)
         {
             // 只要 X 轴速度的绝对值大于 0.1，就认为它在走路
@@ -79,17 +77,14 @@ public class EnemyAI : MonoBehaviour
         // 核心 AI 逻辑（状态机）
         if (distanceToPlayer <= attackRange)
         {
-            // 状态 3：进入攻击范围，准备攻击
             AttackPlayer();
         }
         else if (distanceToPlayer <= detectionRange)
         {
-            // 状态 2：进入视野，但还没到攻击距离，追逐玩家
             ChasePlayer();
         }
         else
         {
-            // 状态 1：玩家不在视野内，按预定路线巡逻
             Patrol();
         }
     }
@@ -97,35 +92,29 @@ public class EnemyAI : MonoBehaviour
     // --- 状态 1：巡逻 ---
     void Patrol()
     {
-        // 只要不在攻击范围内，计时器永远保持在 1 秒（确保下次玩家进入时，依然有 1 秒的反应时间）
         attackTimer = attackCooldown;
 
-        // 判断应该往左走还是往右走
         float direction = (patrolTarget.x > transform.position.x) ? 1f : -1f;
         rb.velocity = new Vector2(direction * patrolSpeed, rb.velocity.y);
 
-        // 转向动画
         FlipTowards(direction);
 
-        // 如果走到了巡逻目标点附近，就掉头
         if (Mathf.Abs(transform.position.x - patrolTarget.x) < 0.2f)
         {
             if (patrolTarget.x > startPosition.x)
-                patrolTarget = new Vector2(startPosition.x - patrolDistance, startPosition.y); // 设为左边目标
+                patrolTarget = new Vector2(startPosition.x - patrolDistance, startPosition.y); 
             else
-                patrolTarget = new Vector2(startPosition.x + patrolDistance, startPosition.y); // 设为右边目标
+                patrolTarget = new Vector2(startPosition.x + patrolDistance, startPosition.y); 
         }
     }
 
     // --- 状态 2：追逐 ---
     void ChasePlayer()
     {
-        attackTimer = attackCooldown; // 追逐时也要重置计时器
+        attackTimer = attackCooldown; 
 
-        // 判断玩家在左边还是右边
         float direction = (player.position.x > transform.position.x) ? 1f : -1f;
         
-        // 朝着玩家加速跑过去
         rb.velocity = new Vector2(direction * chaseSpeed, rb.velocity.y);
         FlipTowards(direction);
     }
@@ -133,6 +122,8 @@ public class EnemyAI : MonoBehaviour
     // --- 状态 3：攻击 ---
     void AttackPlayer()
     {
+        if (isAttacking) return; 
+
         rb.velocity = new Vector2(0, rb.velocity.y);
         float direction = (player.position.x > transform.position.x) ? 1f : -1f;
         FlipTowards(direction);
@@ -141,28 +132,25 @@ public class EnemyAI : MonoBehaviour
         
         if (attackTimer <= 0f)
         {
-            // 时间到了，启动攻击协程！
+            isAttacking = true; // 核心防重播机制：立刻上锁
             StartCoroutine(PerformAttack());
         }
-    }
+    } // 👈 之前這裡漏掉了閉合大括號，現在補上了！
 
-    // 【全新重写的攻击协程】
+    // 【攻击协程】
     IEnumerator PerformAttack()
     {
-        // 1. 上锁！彻底刹车，强行关闭行走动画
-        isAttacking = true;
         rb.velocity = new Vector2(0, rb.velocity.y); 
         
         if (anim != null)
         {
             anim.SetBool("isWalking", false); 
-            anim.SetTrigger("Attack"); // 触发攻击动作
+            anim.SetTrigger("Attack"); // 触发攻击动画
         }
 
-        // 2. 等待“前摇”时间（也就是让动画飞刀或砍下的时间）
         yield return new WaitForSeconds(attackWindUp);
 
-        // 3. 伤害判定：加了一个防逃课机制，如果在这 0.3 秒内玩家用位移闪出了范围，就不扣血（空刀）
+        // 伤害判定
         if (player != null && Vector2.Distance(transform.position, player.position) <= attackRange + 0.5f)
         {
             HealthPoint hp = player.GetComponent<HealthPoint>();
@@ -171,7 +159,6 @@ public class EnemyAI : MonoBehaviour
             if (hp != null)
             {
                 hp.TakeDamage(attackDamage);
-
                 if (combat != null && combat.isDefending)
                 {
                     int realDamage = Mathf.RoundToInt(attackDamage * combat.GetDamageMultiplier());
@@ -184,9 +171,8 @@ public class EnemyAI : MonoBehaviour
             }
         }
 
-        // 4. 攻击完毕，重新进入发呆冷却期
         attackTimer = attackCooldown; 
-        isAttacking = false; // 解锁，允许再次行动
+        isAttacking = false; // 解锁
     }
 
     // --- 辅助方法：翻转怪物贴图 ---
