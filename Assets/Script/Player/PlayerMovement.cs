@@ -37,6 +37,17 @@ public class PlayerMovement : MonoBehaviour
     private Animator anim; 
     private PlayerCombat combatScript; 
 
+    [Header("Player Map Bound")]
+    [SerializeField] private SpriteRenderer mapSprite;
+    [SerializeField] private SpriteRenderer playerSprite;
+    [SerializeField] private bool clampY = false;
+
+    private float minX;
+    private float maxX;
+    private float minY;
+    private float maxY;
+    private bool boundsCalculated;
+
     System.Collections.IEnumerator Dash()
     {
         isDashing=true;
@@ -197,4 +208,68 @@ public class PlayerMovement : MonoBehaviour
             canDash=true;
         }
     }
+
+    private void LateUpdate()
+{
+    if (!boundsCalculated)
+    {
+        CalculatePlayerBounds();
+    }
+
+    KeepPlayerInsideMap();
+}
+
+private void CalculatePlayerBounds()
+{
+    if (mapSprite == null)
+    {
+        return;
+    }
+
+    if (playerSprite == null)
+    {
+        playerSprite = GetComponentInChildren<SpriteRenderer>();
+    }
+
+    Bounds mapBounds = mapSprite.bounds;
+
+    float playerHalfWidth = 0f;
+    float playerHalfHeight = 0f;
+
+    if (playerSprite != null)
+    {
+        playerHalfWidth = playerSprite.bounds.extents.x;
+        playerHalfHeight = playerSprite.bounds.extents.y;
+    }
+
+    minX = mapBounds.min.x + playerHalfWidth;
+    maxX = mapBounds.max.x - playerHalfWidth;
+
+    minY = mapBounds.min.y + playerHalfHeight;
+    maxY = mapBounds.max.y - playerHalfHeight;
+
+    boundsCalculated = true;
+}
+
+private void KeepPlayerInsideMap()
+{
+    if (mapSprite == null)
+    {
+        return;
+    }
+
+    float clampedX = Mathf.Clamp(transform.position.x, minX, maxX);
+    float clampedY = transform.position.y;
+
+    if (clampY)
+    {
+        clampedY = Mathf.Clamp(transform.position.y, minY, maxY);
+    }
+
+    transform.position = new Vector3(
+        clampedX,
+        clampedY,
+        transform.position.z
+    );
+}
 }
