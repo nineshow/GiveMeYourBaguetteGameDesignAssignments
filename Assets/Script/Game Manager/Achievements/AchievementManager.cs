@@ -1,11 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class AchievementManager : MonoBehaviour
 {
 
     public static AchievementManager Instance;
+
+    [SerializeField] private GameObject achievementPanel;
+    [SerializeField] private TMP_Text achievementTitleText;
+    [SerializeField] private TMP_Text achievementDescriptionText;
     [SerializeField] private List<Achievement> achievements =
         new List<Achievement>();
 
@@ -22,6 +27,10 @@ public class AchievementManager : MonoBehaviour
         else
         {
             Destroy(this);
+        }
+        if(achievementPanel!=null)
+        {
+            achievementPanel.SetActive(false);
         }
     }
 
@@ -42,7 +51,8 @@ public class AchievementManager : MonoBehaviour
         achievement.unlocked = true;
 
         Debug.Log("Achievement Unlocked: " + achievement.title + ": " + achievement.description);
-       
+        achievementPanel.SetActive(true);
+        StartCoroutine(ShowAchievement(achievement));
     }
 
     public bool IsUnlocked(string achievementID)
@@ -52,4 +62,15 @@ public class AchievementManager : MonoBehaviour
 
         return achievement != null && achievement.unlocked;
     }
+    private IEnumerator ShowAchievement(Achievement achievement)
+{
+    achievementPanel.SetActive(true);
+
+    achievementTitleText.text = achievement.title;
+    achievementDescriptionText.text = achievement.description;
+
+    yield return new WaitForSeconds(3f);
+
+    achievementPanel.SetActive(false);
+}
 }

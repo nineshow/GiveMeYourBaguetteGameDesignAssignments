@@ -512,6 +512,33 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 096e46ace4d1dd946bcf8c59d6903d49, type: 3}
+--- !u!114 &678075282 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1180312939428136333, guid: b5cfc8f05e845a54d81bceecae013a98, type: 3}
+  m_PrefabInstance: {fileID: 1182841455}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &678075283 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2127827645843096946, guid: b5cfc8f05e845a54d81bceecae013a98, type: 3}
+  m_PrefabInstance: {fileID: 1182841455}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &678075284 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2702954706707462127, guid: b5cfc8f05e845a54d81bceecae013a98, type: 3}
+  m_PrefabInstance: {fileID: 1182841455}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &678160902
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -582,9 +609,21 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 454242200455609597, guid: 2ec805d3f9ed4844aba4877d894b335d, type: 3}
+      propertyPath: achievementPanel
+      value: 
+      objectReference: {fileID: 678075284}
+    - target: {fileID: 454242200455609597, guid: 2ec805d3f9ed4844aba4877d894b335d, type: 3}
+      propertyPath: achievementTitleText
+      value: 
+      objectReference: {fileID: 678075283}
+    - target: {fileID: 454242200455609597, guid: 2ec805d3f9ed4844aba4877d894b335d, type: 3}
       propertyPath: achievements.Array.size
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 454242200455609597, guid: 2ec805d3f9ed4844aba4877d894b335d, type: 3}
+      propertyPath: achievementDescriptionText
+      value: 
+      objectReference: {fileID: 678075282}
     - target: {fileID: 454242200455609597, guid: 2ec805d3f9ed4844aba4877d894b335d, type: 3}
       propertyPath: achievements.Array.data[2].id
       value: KEY
