@@ -69,8 +69,9 @@ public class LevelManager : MonoBehaviour
     public void RestartLevel()
     {
         int currentLevelID=GetCurrentLevelID();
-        SceneManager.LoadScene(currentLevelID);
         ResumeGame(); // 确保在重新加载关卡时恢复游戏时间
+        SceneManager.LoadScene(currentLevelID);
+        
     }
 
     public int GetCurrentLevelID()

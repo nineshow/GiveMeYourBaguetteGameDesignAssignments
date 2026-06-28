@@ -27,8 +27,8 @@ public class ParallaxLayer : MonoBehaviour
 
         transform.position += new Vector3(
             cameraMovement.x * parallaxFactor,
-            cameraMovement.y * parallaxFactor,
-            0f
+            //cameraMovement.y * parallaxFactor,
+            0f,0f
         );
 
         lastCameraPosition = cameraTransform.position;
