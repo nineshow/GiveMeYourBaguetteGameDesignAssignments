@@ -23,7 +23,7 @@ public class HealthPoint : MonoBehaviour
 
     void Start()
     {
-        currentHP = 50;
+        currentHP = 100;
         UpdateHealthUI();
     }
 

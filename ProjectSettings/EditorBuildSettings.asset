@@ -12,7 +12,7 @@ EditorBuildSettings:
     path: Assets/Level0.unity
     guid: a2a3c1899d9670a4fa74c34fc106d392
   - enabled: 1
-    path: Assets/CombatMovementHP.unity
+    path: Assets/Level1.unity
     guid: c4e78516ecbd40842810f4952c56642e
   - enabled: 1
     path: Assets/Level2.unity

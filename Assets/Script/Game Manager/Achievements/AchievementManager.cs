@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class AchievementManager : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class AchievementManager : MonoBehaviour
     [SerializeField] private GameObject achievementPanel;
     [SerializeField] private TMP_Text achievementTitleText;
     [SerializeField] private TMP_Text achievementDescriptionText;
+    [SerializeField] private Image achievementIconImage;
     [SerializeField] private List<Achievement> achievements =
         new List<Achievement>();
 
@@ -65,7 +67,8 @@ public class AchievementManager : MonoBehaviour
     private IEnumerator ShowAchievement(Achievement achievement)
 {
     achievementPanel.SetActive(true);
-
+    
+    achievementIconImage.sprite = achievement.icon;
     achievementTitleText.text = achievement.title;
     achievementDescriptionText.text = achievement.description;
 

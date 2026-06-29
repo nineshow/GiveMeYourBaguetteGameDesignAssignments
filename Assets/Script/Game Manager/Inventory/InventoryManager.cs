@@ -6,9 +6,8 @@ public class InventoryManager : MonoBehaviour
 {
     public static InventoryManager Instance;
 
-    [Header("Player Data")]
-    public int gold = 0;
-    public int potionCount = 0;
+    [Header("Core Data Asset (連接你的PlayerData檔案)")]
+    public PlayerData playerData; // 👈 這裡就是把剛才在 Project 裡建的 NewPlayerData 檔案拖進來！
 
     [Header("Shop Settings")]
     public int potionPrice = 20;
@@ -24,18 +23,32 @@ public class InventoryManager : MonoBehaviour
     private bool isInventoryOpen = false;
     private HealthPoint currentHP;
 
+    // 用於本關開局的備份變數（實現死亡回溯）
+    private int backupGold;
+    private int backupPotionCount;
+    private int backupHealth;
+
     void Awake()
     {
+        // 這裡不需要用 DontDestroyOnLoad 了，因為 PlayerData 檔案本身就不會隨場景銷毀！
         if (Instance == null) Instance = this;
     }
 
     void Start()
     {
-        // Automatically find the player by Tag and get the health script
+        // 1. 自動尋找當前關卡的玩家
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
         {
             currentHP = player.GetComponent<HealthPoint>();
+        }
+
+        // 2. 備份剛進這一關時的初始狀態（方便死掉時回溯物資）
+        if (playerData != null)
+        {
+            backupGold = playerData.gold;
+            backupPotionCount = playerData.potionCount;
+            backupHealth = playerData.currentHealth;
         }
 
         UpdateUI();
@@ -58,22 +71,39 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    public void AddGold(int amount)
+    //  專門給 LevelManager 的 RestartLevel() 呼叫
+    public void ResetToLevelStart()
     {
-        gold += amount;
+        if (playerData != null)
+        {
+            playerData.gold = backupGold;
+            playerData.potionCount = backupPotionCount;
+            playerData.currentHealth = backupHealth;
+        }
         UpdateUI();
-        Debug.Log("Gold collected! Current Total: " + gold);
+        Debug.Log("【Restart 成功】數據已完美回溯到本關開局狀態！");
     }
 
-    // Called by the Buy Button
+    public void AddGold(int amount)
+    {
+        if (playerData != null)
+        {
+            playerData.gold += amount; //  直接修改檔案數據
+            UpdateUI();
+        }
+    }
+
+    // 🛒 點擊購買按鈕觸發這個
     public void BuyPotion()
     {
-        if (gold >= potionPrice)
+        if (playerData == null) return;
+
+        if (playerData.gold >= potionPrice)
         {
-            gold -= potionPrice;
-            potionCount++;
+            playerData.gold -= potionPrice; //  直接修改檔案數據
+            playerData.potionCount++;       //  直接修改檔案數據
             UpdateUI();
-            Debug.Log("Potion bought! Total potions: " + potionCount);
+            Debug.Log("Potion bought! Total potions: " + playerData.potionCount);
         }
         else
         {
@@ -81,14 +111,16 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    // Called by the Use Button
+    //  點擊使用藥水或按 H 觸發
     public void UsePotion()
     {
-        if (potionCount > 0)
+        if (playerData == null) return;
+
+        if (playerData.potionCount > 0)
         {
             if (currentHP != null)
             {
-                potionCount--;
+                playerData.potionCount--; // 直接修改檔案數據
                 currentHP.Heal(healAmount);
                 UpdateUI();
             }
@@ -99,41 +131,39 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-   private void UpdateUI()
+    private void UpdateUI()
     {
+        if (playerData == null) return;
 
-    if (goldText != null) goldText.text = gold.ToString();
-
-    if (potionQuantityText != null) 
-        {
-            potionQuantityText.text = potionCount.ToString();
-        }
+        if (goldText != null) goldText.text = playerData.gold.ToString();
+        if (potionQuantityText != null) potionQuantityText.text = playerData.potionCount.ToString();
     }
+
     private void ToggleInventory()
     {
         isInventoryOpen = !isInventoryOpen;
         if (inventoryPanel != null) inventoryPanel.SetActive(isInventoryOpen);
     }
 
-    public void PickupItem(ItemType itemType,   int amount = 1, string achievementID = null)
-{
-    switch (itemType)
+    public void PickupItem(ItemType itemType, int amount = 1, string achievementID = null)
     {
-        case ItemType.Potion:
-            potionCount += amount;
-            UpdateUI();
-            break;
+        if (playerData == null) return;
 
-        case ItemType.Key:
-            Debug.Log("Key picked up");
-            break;
+        switch (itemType)
+        {
+            case ItemType.Potion:
+                playerData.potionCount += amount;
+                UpdateUI();
+                break;
+
+            case ItemType.Key:
+                Debug.Log("Key picked up");
+                break;
+        }
+
+        if (!string.IsNullOrEmpty(achievementID))
+        {
+            AchievementManager.Instance.Unlock(achievementID);
+        }
     }
-
-    Debug.Log("Picked up: " + itemType + " x" + amount);
-
-    if (!string.IsNullOrEmpty(achievementID))
-    {
-        AchievementManager.Instance.Unlock(achievementID);
-    }
-}
 }
