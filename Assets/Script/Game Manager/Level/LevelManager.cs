@@ -82,6 +82,10 @@ public class LevelManager : MonoBehaviour
     public void LoadMainMenu()
     {
         SceneManager.LoadScene(0);
+        if(gameOverPanel!=null)
+        {
+            gameOverPanel.SetActive(false);
+        }
         ResumeGame(); // 确保在返回主菜单时恢复游戏时间
     }
 
