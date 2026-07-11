@@ -178,7 +178,7 @@ MonoBehaviour:
     m_Bits: 128
   audioSource: {fileID: 7691347398783076103}
   jumpSound: {fileID: 8300000, guid: 0ad65b218cb08ea4aac8bbad0da1a699, type: 3}
-  dashSound: {fileID: 8300000, guid: 114bbd43e2871474794f754a33d43115, type: 3}
+  dashSound: {fileID: 8300000, guid: c0d8e77d6c6b2944b8dd35135feb4528, type: 3}
   maxJumps: 2
   dashSpeed: 15
   dashDuration: 0.2
