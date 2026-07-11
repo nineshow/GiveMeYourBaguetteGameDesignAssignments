@@ -10,6 +10,13 @@ public class PlayerCombat : MonoBehaviour
 
     public bool isDefending;
 
+    [Header("Charge Attack")]
+    public int currentCharge=0;
+    public int maxCharge=100;
+    public bool chargeAttackReady=false;
+    public KeyCode chargeAttackKey=KeyCode.R;
+    public bool chargeAttackActivated=false;
+
     private Animator anim; // 【新增】：声明动画控制器
 
     void Start()
@@ -29,6 +36,20 @@ public class PlayerCombat : MonoBehaviour
             anim.SetBool("isDefending", isDefending);
         }
 
+    if(Input.GetKeyDown(chargeAttackKey) && chargeAttackReady)
+    {
+        //trigger the charge attack
+
+        chargeAttackActivated=true;
+       
+       if(anim!=null)
+        {
+            anim.SetTrigger("ChargeAttack");
+        }
+
+       Debug.Log("Charge Attack Activated!");
+    }
+
     }
 
     // to get the reduction percent
@@ -43,5 +64,39 @@ public class PlayerCombat : MonoBehaviour
 
         //else just return 1 (no reduction)
         return 1f;
+    }
+
+    public void AddCharge(int amount)
+    {
+        currentCharge += amount;
+        if(currentCharge>=maxCharge)
+        {
+            currentCharge=maxCharge;
+            chargeAttackReady=true;
+        }
+
+        Debug.Log("Current Charge: "+currentCharge+"/"+maxCharge);
+    }
+
+    public bool IsChargeAttackReady()
+    {
+        return chargeAttackReady;
+    }
+
+    public bool ConsumeChargeAttack()
+    {
+        if (!chargeAttackActivated|| !chargeAttackReady)
+        {
+            Debug.Log("Current Charge: "+currentCharge+"/"+maxCharge);
+            return false;
+        }
+
+        currentCharge = 0;
+        chargeAttackReady = false;
+        chargeAttackActivated = false;
+
+        Debug.Log("Charge Attack Used!");
+
+        return true;
     }
 }

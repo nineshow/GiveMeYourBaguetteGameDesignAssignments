@@ -18,13 +18,18 @@ public class BossHealth : MonoBehaviour
     //if true=destroy gameobject, false=manually do something else
     public bool destroyOnDeath;
 
+    [Header("Rage Mode Settings")]
+    public bool hasRageMode;
+    private bool isRageModeActive;
+    private bool rageModeDisabled;
+
     void Start()
     {
-        currentHP = 250;
+        currentHP = maxHP;
         UpdateHealthUI();
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage, bool isChargeAttack=false)
     {
         PlayerCombat combat=GetComponent<PlayerCombat>();
 
@@ -36,10 +41,31 @@ public class BossHealth : MonoBehaviour
             multiplier=combat.GetDamageMultiplier();
         }
 
+        if(isRageModeActive&&!isChargeAttack)
+        {
+            multiplier*=0.01f;
+        }
+
+        if(isChargeAttack && hasRageMode)
+        {
+            rageModeDisabled=true;
+            isRageModeActive=false;
+            multiplier=1f;
+            Debug.Log("Boss Rage Mode Disabled by Charge Attack!");
+        }
+
         //calculate with multiplier
         int finalDamage=Mathf.RoundToInt(damage*multiplier);
 
         currentHP -= finalDamage;
+
+        if(currentHP<=maxHP*0.3f && hasRageMode 
+        && !rageModeDisabled && !isRageModeActive)
+        {
+            isRageModeActive=true;
+            Debug.Log("Boss Rage Mode Activated!");
+        }
+        
 
         if (currentHP < 0) currentHP = 0;
 

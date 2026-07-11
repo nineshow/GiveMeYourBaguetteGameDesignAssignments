@@ -18,16 +18,19 @@ public class HealthPoint : MonoBehaviour
     [Header("Optional")]
     //if true=destroy gameobject, false=manually do something else
     public bool destroyOnDeath;
+    public bool hasRageMode;
+    private bool isRageModeActive;
+    private bool rageModeDisabled;
 
     
 
     void Start()
     {
-        currentHP = 100;
+        currentHP = maxHP;
         UpdateHealthUI();
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage, bool isChargeAttack=false)
     {
        
         PlayerCombat combat=GetComponent<PlayerCombat>();
@@ -41,10 +44,35 @@ public class HealthPoint : MonoBehaviour
             multiplier=combat.GetDamageMultiplier();
         }
 
+        //if is in rage mode, reduce damage by 99%
+        if(isRageModeActive&&!isChargeAttack)
+        {
+            multiplier*=0.01f;
+        }
+
+        //disable rage mode if it is charge attack
+        if(gameObject.CompareTag("Monster") && isChargeAttack && hasRageMode)
+        {
+            rageModeDisabled=true;
+            isRageModeActive=false;
+            multiplier=1f;
+            Debug.Log("Monster Rage Mode Disabled by Charge Attack!");
+        }
+
         //calculate with multiplier
         int finalDamage=Mathf.RoundToInt(damage*multiplier);
 
         currentHP -= finalDamage;
+
+       
+        // 【新增】：当怪物血量低于30%时，触发 Rage Mode
+        if(gameObject.CompareTag("Monster") && currentHP<=maxHP*0.3f 
+        && hasRageMode && !isRageModeActive
+        && !rageModeDisabled)
+        {
+            isRageModeActive=true;
+            Debug.Log("Monster Rage Mode Activated!");
+        }
 
         if (currentHP < 0) currentHP = 0;
 

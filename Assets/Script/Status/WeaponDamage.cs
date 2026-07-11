@@ -5,6 +5,9 @@ public class WeaponDamage : MonoBehaviour
 {
     public int damage = 10;
 
+    [Header("Charge Attack Settings")]
+    public int chargeGainPerHit=20;
+
     [Header("碰撞检测持续时间")]
     public float attackDuration = 0.2f;
 
@@ -122,10 +125,27 @@ public class WeaponDamage : MonoBehaviour
 
         // --- 第二步：尝试给小怪造成伤害 ---
         HealthPoint health = other.GetComponent<HealthPoint>();
+
         if(health != null)
         {
-            health.TakeDamage(damage);
-            PlayHitSound(); // 【新增】：播放击中音效
+            bool isChargeAttack = false;
+
+            if(gameObject.CompareTag("PlayerWeapon") && playerCombat != null)
+            {
+                isChargeAttack = playerCombat.ConsumeChargeAttack();
+            }
+
+            health.TakeDamage(damage, isChargeAttack);
+
+            if(gameObject.CompareTag("PlayerWeapon") && other.CompareTag("Monster") && playerCombat != null)
+            {
+                if(!isChargeAttack)
+                {
+                    playerCombat.AddCharge(chargeGainPerHit);
+                }
+            }
+
+            PlayHitSound();
             return; 
         }
 
@@ -133,7 +153,20 @@ public class WeaponDamage : MonoBehaviour
         BossHealth bossHealth = other.GetComponent<BossHealth>();
         if(bossHealth != null)
         {
-            bossHealth.TakeDamage(damage);
+            bool isChargeAttack = false;
+            if(gameObject.CompareTag("PlayerWeapon") && playerCombat != null)
+            {
+                isChargeAttack = playerCombat.ConsumeChargeAttack();
+            }
+          
+            bossHealth.TakeDamage(damage, isChargeAttack);
+            if(gameObject.CompareTag("PlayerWeapon") && playerCombat != null)
+            {
+                if(!isChargeAttack)
+                {
+                    playerCombat.AddCharge(chargeGainPerHit);
+                }
+            }
             PlayHitSound(); // 【新增】：播放击中音效
             return; 
         }
