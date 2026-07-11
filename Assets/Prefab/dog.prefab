@@ -30,8 +30,8 @@ Transform:
   m_GameObject: {fileID: 1589040464454614693}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.05, y: -1.49, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -0.9833, y: -0.3613, z: 0}
+  m_LocalScale: {x: 2.5708642, y: 0.50486875, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -104,15 +104,19 @@ MonoBehaviour:
   player: {fileID: 0}
   attackDamage: 10
   detectionRadius: 8
-  attackRadius: 4
+  attackRadius: 4.5
+  scratchRadius: 2
   patrolSpeed: 1.5
   chaseSpeed: 3
   patrolDistance: 3
   idleTime: 1.5
   pounceForceX: 5
   pounceForceY: 3
+  pouncePreparationTime: 0.2
+  scratchPreparationTime: 0.2
+  scratchHitboxOffset: 1
+  scratchHitboxRadius: 1
   attackCooldown: 1
-  pouncePreparationTime: 0.3
 --- !u!50 &5618615600469203042
 Rigidbody2D:
   serializedVersion: 4
@@ -198,7 +202,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   coinPrefab: {fileID: 6304821386139726524, guid: f28fcdc8728445444a1beccef617947a, type: 3}
-  maxHP: 100
+  maxHP: 50
   currentHP: 0
   healthFill: {fileID: 0}
   destroyOnDeath: 1
