@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-// 确保挂载此脚本的物体会自动添加刚体和音频源组件
+// 去掉了 RequireComponent(typeof(Animator))，因为 Animator 现在在子物体上
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(AudioSource))] 
 public class DogAI : MonoBehaviour
@@ -11,6 +11,9 @@ public class DogAI : MonoBehaviour
 
     [Header("目标引用")]
     public Transform player;
+
+    [Header("组件引用 (子物体)")]
+    public Animator anim; // 【修改】：开放给面板，或者代码自动从子物体寻找
 
     [Header("属性设置")]
     public int attackDamage = 10;      
@@ -33,12 +36,12 @@ public class DogAI : MonoBehaviour
     private float idleTimer;
     private bool isIdling = false;
 
-    [Header("扑击设置")]
+    [Header("扑击设置 (抛物线跳脸)")]
     public float pounceForceX = 5f;    
     public float pounceForceY = 6f;    
     public float pouncePreparationTime = 0.3f; 
 
-    [Header("挠击设置")]
+    [Header("挠击设置 (近战攻击)")]
     public float scratchPreparationTime = 0.2f; 
     public float scratchHitboxOffset = 0.5f;    
     public float scratchHitboxRadius = 0.4f;    
@@ -48,22 +51,26 @@ public class DogAI : MonoBehaviour
     private float lastAttackTime;
 
     [Header("音效设置")]
-    public AudioClip pounceSound;   // 扑击音效
-    public AudioClip scratchSound;  // 挠击音效
-    private AudioSource audioSource;
+    public AudioClip pounceSound;   
+    public AudioClip scratchSound;  
     
+    private AudioSource audioSource;
+    private Rigidbody2D rb;
+
     private bool isLeaping = false;       
     private bool hasDealtDamage = false;  
-
-    private Rigidbody2D rb;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        
-        // 获取音频播放器，并设置为不自动播放
         audioSource = GetComponent<AudioSource>();
         audioSource.playOnAwake = false;
+
+        // 【修改】：自动获取子物体上的 Animator 组件
+        if (anim == null)
+        {
+            anim = GetComponentInChildren<Animator>();
+        }
 
         if (player == null)
         {
@@ -79,6 +86,12 @@ public class DogAI : MonoBehaviour
 
     private void Update()
     {
+        // 传递速度给 Animator 控制跑步/待机动画
+        if (currentState != DogState.Attacking && anim != null) 
+        {
+            anim.SetFloat("Speed", Mathf.Abs(rb.velocity.x));
+        }
+
         if (player == null) return;
 
         if (currentState != DogState.Attacking)
@@ -168,13 +181,11 @@ public class DogAI : MonoBehaviour
         int dirX = player.position.x > transform.position.x ? 1 : -1;
         FlipSprite(dirX); 
         
+        if (anim != null) anim.SetTrigger("Pounce");
+
         yield return new WaitForSeconds(pouncePreparationTime);
 
-        // 【新增】：播放扑击音效
-        if (pounceSound != null)
-        {
-            audioSource.PlayOneShot(pounceSound);
-        }
+        if (pounceSound != null) audioSource.PlayOneShot(pounceSound);
 
         isLeaping = true; 
         hasDealtDamage = false; 
@@ -197,13 +208,11 @@ public class DogAI : MonoBehaviour
         int dirX = player.position.x > transform.position.x ? 1 : -1;
         FlipSprite(dirX);
 
+        if (anim != null) anim.SetTrigger("Scratch");
+
         yield return new WaitForSeconds(scratchPreparationTime);
 
-        // 【新增】：播放挠击音效
-        if (scratchSound != null)
-        {
-            audioSource.PlayOneShot(scratchSound);
-        }
+        if (scratchSound != null) audioSource.PlayOneShot(scratchSound);
 
         Vector2 attackPoint = new Vector2(transform.position.x + (dirX * scratchHitboxOffset), transform.position.y);
         Collider2D[] hitObjects = Physics2D.OverlapCircleAll(attackPoint, scratchHitboxRadius);
@@ -250,6 +259,7 @@ public class DogAI : MonoBehaviour
         }
     }
 
+    // 翻转逻辑保持不变，因为翻转父物体的 Scale 会连带翻转所有子物体（包括 visual 和 Hitbox）
     private void FlipSprite(int directionX)
     {
         if (directionX > 0)
