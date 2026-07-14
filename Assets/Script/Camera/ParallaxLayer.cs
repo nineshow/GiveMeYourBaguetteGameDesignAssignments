@@ -6,7 +6,7 @@ public class ParallaxLayer : MonoBehaviour
     [SerializeField] private Transform cameraTransform;
 
     [Header("Parallax Settings")]
-    [Range(0f, 1f)]
+    [Range(-1f, 1f)]
     [SerializeField] private float parallaxFactor = 0.5f;
 
     private Vector3 lastCameraPosition;
