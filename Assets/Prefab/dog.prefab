@@ -105,6 +105,10 @@ MonoBehaviour:
   currentState: 0
   player: {fileID: 0}
   anim: {fileID: 0}
+  normalAnimController: {fileID: 9100000, guid: c4753731470ff83458b72ecb85c504e1, type: 2}
+  rageAnimController: {fileID: 9100000, guid: f24cfccc65f6e324fabbc27d7dfe5bf6, type: 2}
+  transformToRageTime: 2.04
+  revertToNormalTime: 2
   attackDamage: 10
   detectionRadius: 8
   attackRadius: 4.5
@@ -207,11 +211,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   coinPrefab: {fileID: 6304821386139726524, guid: f28fcdc8728445444a1beccef617947a, type: 3}
-  maxHP: 50
+  maxHP: 200
   currentHP: 0
   healthFill: {fileID: 0}
   destroyOnDeath: 1
   hasRageMode: 1
+  isRageModeActive: 0
+  rageModeDisabled: 0
 --- !u!82 &5828990950809008576
 AudioSource:
   m_ObjectHideFlags: 0
@@ -403,7 +409,7 @@ Animator:
   m_GameObject: {fileID: 8505002469843800590}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 66f95f66d5a5ba04884cdca627a31e14, type: 2}
+  m_Controller: {fileID: 9100000, guid: c4753731470ff83458b72ecb85c504e1, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
