@@ -925,7 +925,7 @@ PrefabInstance:
       objectReference: {fileID: 942708562}
     - target: {fileID: 4602895530218296333, guid: 2ec805d3f9ed4844aba4877d894b335d, type: 3}
       propertyPath: guides.Array.size
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4602895530218296333, guid: 2ec805d3f9ed4844aba4877d894b335d, type: 3}
       propertyPath: guides.Array.data[0]
@@ -937,7 +937,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4602895530218296333, guid: 2ec805d3f9ed4844aba4877d894b335d, type: 3}
       propertyPath: guides.Array.data[2]
-      value: Hold L in air to Glide
+      value: Press Left Shift to dash
       objectReference: {fileID: 0}
     - target: {fileID: 4822840740298385499, guid: 2ec805d3f9ed4844aba4877d894b335d, type: 3}
       propertyPath: m_LocalPosition.x
