@@ -19,8 +19,8 @@ public class HealthPoint : MonoBehaviour
     //if true=destroy gameobject, false=manually do something else
     public bool destroyOnDeath;
     public bool hasRageMode;
-    private bool isRageModeActive;
-    private bool rageModeDisabled;
+    public bool isRageModeActive;   // 改成 public
+    public bool rageModeDisabled;   // 改成 public
 
     
 

@@ -1,19 +1,25 @@
 using System.Collections;
 using UnityEngine;
 
-// 去掉了 RequireComponent(typeof(Animator))，因为 Animator 现在在子物体上
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(AudioSource))] 
 public class DogAI : MonoBehaviour
 {
-    public enum DogState { Patrolling, Chasing, WaitingToAttack, Attacking }
+    // 【新增】：Transforming (变身状态)，变身期间小狗不会移动和攻击
+    public enum DogState { Patrolling, Chasing, WaitingToAttack, Attacking, Transforming }
     public DogState currentState;
 
-    [Header("目标引用")]
+    [Header("目标与组件引用")]
     public Transform player;
+    public Animator anim; 
+    private HealthPoint hpTracker; // 用于读取血量脚本里的狂暴状态
 
-    [Header("组件引用 (子物体)")]
-    public Animator anim; // 【修改】：开放给面板，或者代码自动从子物体寻找
+    [Header("狂暴形态设置 (二阶段)")]
+    public RuntimeAnimatorController normalAnimController; // 第一阶段的普通动画控制器
+    public RuntimeAnimatorController rageAnimController;   // 第二阶段的狂暴动画控制器
+    public float transformToRageTime = 3f;                 // 进狂暴的动画时间
+    public float revertToNormalTime = 2f;                  // 退回普通的动画时间
+    private bool currentlyInRageMode = false;              // 本地记录当前的狂暴状态
 
     [Header("属性设置")]
     public int attackDamage = 10;      
@@ -65,11 +71,18 @@ public class DogAI : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         audioSource = GetComponent<AudioSource>();
         audioSource.playOnAwake = false;
+        
+        hpTracker = GetComponent<HealthPoint>(); // 获取身上的通用血量脚本
 
-        // 【修改】：自动获取子物体上的 Animator 组件
         if (anim == null)
         {
             anim = GetComponentInChildren<Animator>();
+        }
+
+        // 确保一开始使用的是普通动画控制器
+        if (anim != null && normalAnimController != null)
+        {
+            anim.runtimeAnimatorController = normalAnimController;
         }
 
         if (player == null)
@@ -87,39 +100,43 @@ public class DogAI : MonoBehaviour
     private void Update()
     {
         // 传递速度给 Animator 控制跑步/待机动画
-        if (currentState != DogState.Attacking && anim != null) 
+        if (currentState != DogState.Attacking && currentState != DogState.Transforming && anim != null) 
         {
             anim.SetFloat("Speed", Mathf.Abs(rb.velocity.x));
         }
 
-        if (player == null) return;
+        if (player == null || hpTracker == null) return;
 
-        if (currentState != DogState.Attacking)
+        // --- 核心：狂暴状态监听与切换 ---
+        CheckRageStateChange();
+
+        // 如果正在变身，或者正在攻击，就不执行其他的 AI 寻路逻辑
+        if (currentState == DogState.Attacking || currentState == DogState.Transforming) return;
+
+        // --- 正常的 AI 逻辑 ---
+        float distanceToPlayer = Vector2.Distance(transform.position, player.position);
+
+        if (distanceToPlayer <= scratchRadius)
         {
-            float distanceToPlayer = Vector2.Distance(transform.position, player.position);
-
-            if (distanceToPlayer <= scratchRadius)
-            {
-                if (Time.time >= lastAttackTime + attackCooldown)
-                    StartCoroutine(ScratchAttackRoutine());
-                else
-                    currentState = DogState.WaitingToAttack;
-            }
-            else if (distanceToPlayer <= attackRadius)
-            {
-                if (Time.time >= lastAttackTime + attackCooldown)
-                    StartCoroutine(JumpAttackRoutine());
-                else
-                    currentState = DogState.WaitingToAttack;
-            }
-            else if (distanceToPlayer <= detectionRadius)
-            {
-                currentState = DogState.Chasing;
-            }
+            if (Time.time >= lastAttackTime + attackCooldown)
+                StartCoroutine(ScratchAttackRoutine());
             else
-            {
-                currentState = DogState.Patrolling;
-            }
+                currentState = DogState.WaitingToAttack;
+        }
+        else if (distanceToPlayer <= attackRadius)
+        {
+            if (Time.time >= lastAttackTime + attackCooldown)
+                StartCoroutine(JumpAttackRoutine());
+            else
+                currentState = DogState.WaitingToAttack;
+        }
+        else if (distanceToPlayer <= detectionRadius)
+        {
+            currentState = DogState.Chasing;
+        }
+        else
+        {
+            currentState = DogState.Patrolling;
         }
     }
 
@@ -133,14 +150,79 @@ public class DogAI : MonoBehaviour
         {
             Chase();
         }
-        else if (currentState == DogState.WaitingToAttack)
+        else if (currentState == DogState.WaitingToAttack || currentState == DogState.Transforming)
         {
+            // 变身或者等待攻击时，都会强制停车
             rb.velocity = new Vector2(0, rb.velocity.y);
+            
+            // 变身时最好也面朝玩家
             int dirX = player.position.x > transform.position.x ? 1 : -1;
             FlipSprite(dirX); 
         }
     }
 
+    // --- 【新增】：检测并执行狂暴变身的逻辑 ---
+    private void CheckRageStateChange()
+    {
+        // 如果 HealthPoint 里进入了狂暴，但本地还没变身
+        if (hpTracker.isRageModeActive && !currentlyInRageMode && currentState != DogState.Transforming)
+        {
+            StartCoroutine(TransformToRageRoutine());
+        }
+        // 如果 HealthPoint 里的狂暴被打断退出了，但本地还在狂暴状态
+        else if (!hpTracker.isRageModeActive && currentlyInRageMode && currentState != DogState.Transforming)
+        {
+            StartCoroutine(RevertToNormalRoutine());
+        }
+    }
+
+    // 变身为狂暴形态的协程
+    private IEnumerator TransformToRageRoutine()
+    {
+        currentState = DogState.Transforming;
+        rb.velocity = new Vector2(0, rb.velocity.y); // 刹车
+
+        // 1. 播放一阶段的【进入狂暴】动画
+        if (anim != null) anim.SetTrigger("EnterRage");
+
+        // 2. 等待 3 秒（变身动画播放的时间）
+        yield return new WaitForSeconds(transformToRageTime);
+
+        // 3. 瞬间替换整个动画控制器为第二阶段（贴图和动画逻辑全换）
+        if (anim != null && rageAnimController != null)
+        {
+            anim.runtimeAnimatorController = rageAnimController;
+        }
+
+        // 4. 更新状态，满血复活（或者直接追击）
+        currentlyInRageMode = true;
+        currentState = DogState.Chasing;
+    }
+
+    // 退出狂暴形态的协程
+    private IEnumerator RevertToNormalRoutine()
+    {
+        currentState = DogState.Transforming;
+        rb.velocity = new Vector2(0, rb.velocity.y); // 刹车
+
+        // 1. 播放二阶段的【退出狂暴】动画被打回原型
+        if (anim != null) anim.SetTrigger("ExitRage");
+
+        // 2. 等待退化动画播放完毕
+        yield return new WaitForSeconds(revertToNormalTime);
+
+        // 3. 瞬间替换回第一阶段的动画控制器
+        if (anim != null && normalAnimController != null)
+        {
+            anim.runtimeAnimatorController = normalAnimController;
+        }
+
+        // 4. 更新状态，恢复普通 AI
+        currentlyInRageMode = false;
+        currentState = DogState.WaitingToAttack;
+    }
+
+    // 以下原有 AI 逻辑保持不变...
     private void Patrol()
     {
         if (isIdling)
@@ -176,7 +258,6 @@ public class DogAI : MonoBehaviour
     private IEnumerator JumpAttackRoutine()
     {
         currentState = DogState.Attacking; 
-        
         rb.velocity = new Vector2(0, rb.velocity.y); 
         int dirX = player.position.x > transform.position.x ? 1 : -1;
         FlipSprite(dirX); 
@@ -195,7 +276,6 @@ public class DogAI : MonoBehaviour
         yield return new WaitForSeconds(0.6f); 
 
         isLeaping = false;
-        
         lastAttackTime = Time.time;
         currentState = DogState.WaitingToAttack; 
     }
@@ -203,7 +283,6 @@ public class DogAI : MonoBehaviour
     private IEnumerator ScratchAttackRoutine()
     {
         currentState = DogState.Attacking;
-
         rb.velocity = new Vector2(0, rb.velocity.y);
         int dirX = player.position.x > transform.position.x ? 1 : -1;
         FlipSprite(dirX);
@@ -231,7 +310,6 @@ public class DogAI : MonoBehaviour
         }
 
         yield return new WaitForSeconds(0.3f);
-
         lastAttackTime = Time.time;
         currentState = DogState.WaitingToAttack;
     }
@@ -259,7 +337,6 @@ public class DogAI : MonoBehaviour
         }
     }
 
-    // 翻转逻辑保持不变，因为翻转父物体的 Scale 会连带翻转所有子物体（包括 visual 和 Hitbox）
     private void FlipSprite(int directionX)
     {
         if (directionX > 0)
@@ -276,21 +353,13 @@ public class DogAI : MonoBehaviour
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, detectionRadius);
-
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, attackRadius);
-
         Gizmos.color = new Color(1f, 0.5f, 0f); 
         Gizmos.DrawWireSphere(transform.position, scratchRadius);
-
         Gizmos.color = Color.cyan;
         int dirX = transform.localScale.x > 0 ? 1 : -1; 
         Vector2 attackPoint = new Vector2(transform.position.x + (dirX * scratchHitboxOffset), transform.position.y);
         Gizmos.DrawWireSphere(attackPoint, scratchHitboxRadius);
-
-        Gizmos.color = Color.green;
-        Vector3 leftPos = new Vector3(transform.position.x - patrolDistance, transform.position.y, transform.position.z);
-        Vector3 rightPos = new Vector3(transform.position.x + patrolDistance, transform.position.y, transform.position.z);
-        Gizmos.DrawLine(leftPos, rightPos);
     }
 }
