@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Security.Cryptography.X509Certificates;
 
 public class WeaponDamage : MonoBehaviour
 {
@@ -30,6 +31,8 @@ public class WeaponDamage : MonoBehaviour
     private Animator anim; 
     private PlayerCombat playerCombat; 
 
+    private bool isChargeAttack = false; // 用于标记当前攻击是否为蓄力攻击
+
     void Start()
     {
         myCollider = GetComponent<Collider2D>();
@@ -55,6 +58,30 @@ public class WeaponDamage : MonoBehaviour
 
             Attack();
         }
+    }
+
+        public void PerformChargeAttack()
+    {
+        if (myCollider == null)
+        {
+            return;
+        }
+
+        isChargeAttack = true;
+
+        StartCoroutine(ChargeAttackColliderRoutine());
+    }
+
+    private IEnumerator ChargeAttackColliderRoutine()
+    {
+        myCollider.enabled = true;
+
+        yield return new WaitForSeconds(attackDuration);
+
+        myCollider.enabled = false;
+
+        // The next normal attack must not be treated as charged.
+        isChargeAttack = false;
     }
 
     void Attack()
@@ -128,12 +155,6 @@ public class WeaponDamage : MonoBehaviour
 
         if(health != null)
         {
-            bool isChargeAttack = false;
-
-            if(gameObject.CompareTag("PlayerWeapon") && playerCombat != null)
-            {
-                isChargeAttack = playerCombat.ConsumeChargeAttack();
-            }
 
             health.TakeDamage(damage, isChargeAttack);
 
@@ -153,11 +174,6 @@ public class WeaponDamage : MonoBehaviour
         BossHealth bossHealth = other.GetComponent<BossHealth>();
         if(bossHealth != null)
         {
-            bool isChargeAttack = false;
-            if(gameObject.CompareTag("PlayerWeapon") && playerCombat != null)
-            {
-                isChargeAttack = playerCombat.ConsumeChargeAttack();
-            }
           
             bossHealth.TakeDamage(damage, isChargeAttack);
             if(gameObject.CompareTag("PlayerWeapon") && playerCombat != null)

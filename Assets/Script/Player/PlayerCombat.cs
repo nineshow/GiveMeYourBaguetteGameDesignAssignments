@@ -31,9 +31,14 @@ public class PlayerCombat : MonoBehaviour
 
     private Animator anim;
 
+    [Header("Weapon")]
+    public WeaponDamage weaponDamage;
+
+
     void Start()
     {
         anim = GetComponentInChildren<Animator>();
+        weaponDamage = GetComponentInChildren<WeaponDamage>();
         
         // 游戏开始时刷新一次 UI，确保进度条初始状态是空的
         UpdateChargeUI();
@@ -76,6 +81,11 @@ public class PlayerCombat : MonoBehaviour
 
             // 生成大招专属特效
             SpawnEffect(chargeAttackEffectPrefab);
+
+            if(weaponDamage != null)
+            {
+                weaponDamage.PerformChargeAttack();
+            }
 
             // 释放大招后立刻调用消耗逻辑，进度条会瞬间清零
             ConsumeChargeAttack();
