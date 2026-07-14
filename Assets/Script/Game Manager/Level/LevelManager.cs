@@ -66,6 +66,14 @@ public class LevelManager : MonoBehaviour
         SceneManager.LoadScene(nextSceneID);
     }
 
+    public void LoadNextLevel()
+    {
+        int nextLevelID=GetCurrentLevelID()+1;
+        Debug.Log("Loading next level: "+nextLevelID);
+        LoadLevel(nextLevelID);
+        
+    }
+
     public void RestartLevel()
     {
         int currentLevelID=GetCurrentLevelID();
