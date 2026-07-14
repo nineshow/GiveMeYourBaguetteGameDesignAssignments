@@ -572,6 +572,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 9100000, guid: f24cfccc65f6e324fabbc27d7dfe5bf6, type: 2}
     - target: {fileID: 5348300080871747653, guid: cf600abe7eb69e147a73ef447148c0f2, type: 3}
+      propertyPath: transformToRageTime
+      value: 2.04
+      objectReference: {fileID: 0}
+    - target: {fileID: 5348300080871747653, guid: cf600abe7eb69e147a73ef447148c0f2, type: 3}
       propertyPath: normalAnimController
       value: 
       objectReference: {fileID: 9100000, guid: c4753731470ff83458b72ecb85c504e1, type: 2}
@@ -622,6 +626,10 @@ PrefabInstance:
     - target: {fileID: 6225484338735412320, guid: cf600abe7eb69e147a73ef447148c0f2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8409181360674613736, guid: cf600abe7eb69e147a73ef447148c0f2, type: 3}
+      propertyPath: maxHP
+      value: 200
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
