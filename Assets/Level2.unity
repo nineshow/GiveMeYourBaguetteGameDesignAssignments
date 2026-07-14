@@ -770,6 +770,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b5cfc8f05e845a54d81bceecae013a98, type: 3}
+--- !u!114 &602450927 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6977896774734374843, guid: b5cfc8f05e845a54d81bceecae013a98, type: 3}
+  m_PrefabInstance: {fileID: 602450926}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &677857651
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -850,6 +861,10 @@ PrefabInstance:
       propertyPath: healthFill
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 6212899813854932884, guid: cab54508aae841942bdf4e6ca03b78ac, type: 3}
+      propertyPath: chargeBarFill
+      value: 
+      objectReference: {fileID: 602450927}
     - target: {fileID: 6244958019954591936, guid: cab54508aae841942bdf4e6ca03b78ac, type: 3}
       propertyPath: mapSprite
       value: 

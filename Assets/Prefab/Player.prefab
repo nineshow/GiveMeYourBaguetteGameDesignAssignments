@@ -204,6 +204,8 @@ MonoBehaviour:
   healthFill: {fileID: 0}
   destroyOnDeath: 0
   hasRageMode: 0
+  isRageModeActive: 0
+  rageModeDisabled: 0
 --- !u!114 &6212899813854932884
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -229,6 +231,7 @@ MonoBehaviour:
   attackPoint: {fileID: 7315757198051840323}
   effectDuration: 0.5
   chargeBarFill: {fileID: 0}
+  weaponDamage: {fileID: 2691327098414171630}
 --- !u!82 &7691347398783076103
 AudioSource:
   m_ObjectHideFlags: 0

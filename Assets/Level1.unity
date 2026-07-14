@@ -528,6 +528,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6212899813854932884, guid: cab54508aae841942bdf4e6ca03b78ac, type: 3}
+      propertyPath: weaponDamage
+      value: 
+      objectReference: {fileID: 861998662}
+    - target: {fileID: 6212899813854932884, guid: cab54508aae841942bdf4e6ca03b78ac, type: 3}
       propertyPath: chargeBarFill
       value: 
       objectReference: {fileID: 1399306677}
@@ -544,6 +548,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cab54508aae841942bdf4e6ca03b78ac, type: 3}
+--- !u!114 &861998662 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2691327098414171630, guid: cab54508aae841942bdf4e6ca03b78ac, type: 3}
+  m_PrefabInstance: {fileID: 861998661}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82c5c35a7b5746c4ca344561a6df38d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &934672084 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4962464330297012976, guid: b5cfc8f05e845a54d81bceecae013a98, type: 3}
