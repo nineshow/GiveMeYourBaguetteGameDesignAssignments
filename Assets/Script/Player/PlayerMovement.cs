@@ -73,6 +73,7 @@ public class PlayerMovement : MonoBehaviour
         isDashing=false;
 
         if (anim != null) anim.SetBool("isDashing", false);
+        yield return new WaitForSeconds(1.0f);
     }
 
     System.Collections.IEnumerator Hurt()
