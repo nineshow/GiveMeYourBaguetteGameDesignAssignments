@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class HealthPoint : MonoBehaviour
 {
     public GameObject coinPrefab; 
+    public GameObject loadTriggerPrefab; // Reference to the load trigger prefab
     
 
      [Header("Health Settings")]
@@ -27,6 +28,10 @@ public class HealthPoint : MonoBehaviour
     void Start()
     {
         currentHP = maxHP;
+        if(loadTriggerPrefab != null)
+        {
+            loadTriggerPrefab.SetActive(false); // Deactivate the load trigger at the start
+        }
         UpdateHealthUI();
     }
 
@@ -138,6 +143,10 @@ public class HealthPoint : MonoBehaviour
         {
             LevelManager.Instance.gameOverPanel.SetActive(true);
             LevelManager.Instance.PauseGame();
+        }
+        if (loadTriggerPrefab != null)
+        {
+            loadTriggerPrefab.SetActive(true); // Activate the load trigger when the player dies
         }
     }
 }

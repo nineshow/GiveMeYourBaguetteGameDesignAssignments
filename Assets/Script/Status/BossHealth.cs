@@ -7,6 +7,8 @@ public class BossHealth : MonoBehaviour
 {
     public GameObject coinPrefab; 
 
+    public GameObject loadTriggerPrefab; // Reference to the load trigger prefab
+
      [Header("Health Settings")]
     public int maxHP = 250;
     public int currentHP;
@@ -26,6 +28,10 @@ public class BossHealth : MonoBehaviour
     void Start()
     {
         currentHP = maxHP;
+        if(loadTriggerPrefab != null)
+        {
+            loadTriggerPrefab.SetActive(false); // Deactivate the load trigger at the start
+        }
         UpdateHealthUI();
     }
 
@@ -113,6 +119,10 @@ public class BossHealth : MonoBehaviour
         {
             Instantiate(coinPrefab, transform.position, Quaternion.identity);
             Destroy(gameObject);
+        }
+        if (loadTriggerPrefab != null)
+        {
+            loadTriggerPrefab.SetActive(true); // Activate the load trigger when the boss dies
         }
     }
 }
