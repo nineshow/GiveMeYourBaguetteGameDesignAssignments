@@ -48,7 +48,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Comics/Level3/comic3_2.unity
     guid: 9f7ddc89264d5a047abb2b685452c9ac
   - enabled: 1
-    path: Assets/level3.unity
+    path: Assets/Level3.unity
     guid: 1633722368c41eb42a9611f23d27352f
   - enabled: 1
     path: Assets/Scenes/Comics/Level3/comic3_3.unity
