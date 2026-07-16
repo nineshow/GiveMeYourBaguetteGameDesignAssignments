@@ -8,6 +8,7 @@ public class LevelManager : MonoBehaviour
     private bool isGamePaused = false;
 
     public GameObject gameOverPanel;
+    private int pendingLevelID;
 
     [SerializeField] private GameObject pausePanel;
 
@@ -54,16 +55,26 @@ public class LevelManager : MonoBehaviour
         
     }
 
-    public void LoadLevel(int nextSceneID)
+    public void LoadLevel(int id)
     {
-        //check if scene exist first
-        if(nextSceneID<0||nextSceneID>= UnityEngine.
-        SceneManagement.SceneManager.sceneCountInBuildSettings)
+        // 1. 先把要去的關卡 ID 存起來
+        pendingLevelID = id;
+
+        // 2. 【核心動作】：立刻觸發你的黑幕開始變黑 (假設你的黑幕腳本叫 TransitionManager)
+        if (TransitionManager.instance != null)
         {
-            Debug.LogError("Invalid scene ID: "+nextSceneID);
-            return;
+            // 讓黑幕立刻開始由透明變黑 (我們只讓它跑前半段的變黑，不讓它在裡面切場景)
+            TransitionManager.instance.StartFadeOut(); 
         }
-        SceneManager.LoadScene(nextSceneID);
+
+        // 3. 【強行煞車】：等待 0.5 秒鐘之後，才去執行真正的場景切換
+        Invoke("ExecuteSceneLoad", 0.5f); 
+    }
+
+    // 4. 1秒後被 Invoke 呼叫的真正切換方法
+    private void ExecuteSceneLoad()
+    {
+        SceneManager.LoadScene(pendingLevelID);
     }
 
     public void LoadNextLevel()
