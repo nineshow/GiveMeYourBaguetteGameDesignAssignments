@@ -178,8 +178,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   audioSource: {fileID: 7691347398783076103}
-  jumpSound: {fileID: 8300000, guid: 0ad65b218cb08ea4aac8bbad0da1a699, type: 3}
-  dashSound: {fileID: 8300000, guid: c0d8e77d6c6b2944b8dd35135feb4528, type: 3}
+  jumpSound: {fileID: 8300000, guid: e314ff5dcfeb5f846b304f8204776f47, type: 3}
+  dashSound: {fileID: 8300000, guid: db7e09da45cf4ba44a7d6ec2b25ea8f3, type: 3}
   maxJumps: 2
   dashSpeed: 15
   dashDuration: 0.2
@@ -199,6 +199,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   coinPrefab: {fileID: 6304821386139726524, guid: f28fcdc8728445444a1beccef617947a, type: 3}
+  loadTriggerPrefab: {fileID: 0}
   maxHP: 100
   currentHP: 100
   healthFill: {fileID: 0}
