@@ -1,41 +1,48 @@
 using UnityEngine;
+using UnityEngine.UI; // 🎯 必須引入UI命名空間以控制進度條
 
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Movement")]
-    public float moveSpeed=5f;
+    public float moveSpeed = 5f;
 
     [Header("Jump")]
-    public float jumpForce=10f;
+    public float jumpForce = 10f;
 
     [Header("Glide")]
-    public float normalGravity=3f;
-    public float glideGravity=0.5f;
+    public float normalGravity = 3f;
+    public float glideGravity = 0.5f;
 
     [Header("Ground Check")]
     public Transform groundCheck;
     public LayerMask groundLayer;
 
-    // 【新增】：音效设置面板
     [Header("Audio Settings")]
     public AudioSource audioSource; // 播放声音的“扬声器”
     public AudioClip jumpSound;     // 跳跃音效
     public AudioClip dashSound;     // 冲刺音效
 
+    // 🎯【新增】：衝刺 UI 設置面板
+    [Header("Dash UI Settings")]
+    public Image dashBarFill;       // 衝刺冷卻進度條 (Image Type 必須是 Filled)
+    public GameObject dashGlowLayer; // 衝刺就緒時的發光圖層
+    public float dashCooldown = 1.0f; // 衝刺冷卻時間（對齊你原本協程底部的 1.0f）
+    private float dashTimer = 1.0f;   // 衝刺計時器，預設為滿值代表開局可用
+
     private Rigidbody2D rb;
     private bool isGrounded;
 
-    public int maxJumps=2;
+    public int maxJumps = 2;
     private int jumpsRemaining;
 
     private bool standing;
 
-    public float dashSpeed=15f;
-    public float dashDuration=0.2f;
+    public float dashSpeed = 15f;
+    public float dashDuration = 0.2f;
 
     private bool isDashing;
-    private int facingDirection=1;
-    private bool canDash=true;
+    private int facingDirection = 1;
+    private bool canDash = true;
 
     private bool isGliding;
     private bool isTakingDamage;
@@ -56,31 +63,34 @@ public class PlayerMovement : MonoBehaviour
 
     System.Collections.IEnumerator Dash()
     {
-        isDashing=true;
+        isDashing = true;
+        dashTimer = 0f; // 🎯【新增】：衝刺觸發，冷卻計時器歸零，UI條會瞬間變空
 
         if (anim != null) anim.SetBool("isDashing", true);
 
-        float originalGravity=rb.gravityScale;
-        rb.gravityScale=0f;
+        float originalGravity = rb.gravityScale;
+        rb.gravityScale = 0f;
 
-        rb.velocity=new Vector2(
-            facingDirection*dashSpeed,
+        rb.velocity = new Vector2(
+            facingDirection * dashSpeed,
             0f
         );
 
         yield return new WaitForSeconds(dashDuration);
-        rb.gravityScale=originalGravity;
-        isDashing=false;
+        rb.gravityScale = originalGravity;
+        isDashing = false;
 
         if (anim != null) anim.SetBool("isDashing", false);
-        yield return new WaitForSeconds(1.0f);
+        
+        // 🎯 注意：原本這裡有 yield return new WaitForSeconds(1.0f); 
+        // 為了讓冷卻計時更精準流暢，冷卻時間交由 Update 中的 dashTimer 接管，此處移除死等
     }
 
     System.Collections.IEnumerator Hurt()
     {
-        isTakingDamage=true;
+        isTakingDamage = true;
         yield return new WaitForSeconds(0.5f);
-        isTakingDamage=false; 
+        isTakingDamage = false; 
     }
 
     public void isDamage()
@@ -95,13 +105,31 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        jumpsRemaining=maxJumps;
+        jumpsRemaining = maxJumps;
         anim = GetComponentInChildren<Animator>();
         combatScript = GetComponent<PlayerCombat>();
+        
+        // 🎯 遊戲開始時初始化一次 UI
+        dashTimer = dashCooldown;
+        UpdateDashUI();
     }
 
     void Update()
     {
+        // 🎯【新增】：即時計算衝刺冷卻時間
+        if (!canDash)
+        {
+            dashTimer += Time.deltaTime;
+            if (dashTimer >= dashCooldown)
+            {
+                dashTimer = dashCooldown;
+                canDash = true; // 冷卻完畢，解鎖衝刺
+            }
+        }
+        
+        // 🎯【新增】：每幀同步刷新 Dash UI 的進度與發光狀態
+        UpdateDashUI();
+
         // ==========================================
         // 第一步：不管什么状态，永远优先检测是否落地！
         // ==========================================
@@ -113,10 +141,16 @@ public class PlayerMovement : MonoBehaviour
 
         if(isGrounded && !standing)
         {
-            jumpsRemaining=maxJumps;
-            canDash=true; 
+            jumpsRemaining = maxJumps;
+            // 🎯 原本這裡有 canDash = true; 
+            // 為了不破壞你「落地刷新衝刺」的原始機制，這裡加上計時器回滿，讓 UI 瞬間亮起
+            if (!canDash)
+            {
+                canDash = true;
+                dashTimer = dashCooldown;
+            }
         }
-        standing=isGrounded;
+        standing = isGrounded;
 
         // 实时同步基础动画状态
         if (anim != null) 
@@ -130,26 +164,21 @@ public class PlayerMovement : MonoBehaviour
         // ==========================================
         if(isDashing) 
         {
-            return; // 冲刺状态全权由协程接管，无需干涉
+            return; 
         }
 
         if(isTakingDamage || (combatScript != null && combatScript.isDefending))
         {
-            // 紧急刹车！把水平速度清零，垂直速度保持
             rb.velocity = new Vector2(0f, rb.velocity.y);
-            
-            // 强行恢复正常重力
             rb.gravityScale = normalGravity;
             isGliding = false;
 
-            // 强制关闭奔跑和滑翔的动画开关
             if (anim != null)
             {
                 anim.SetBool("isRunning", false);
                 anim.SetBool("isGliding", false);
             }
-
-            return; // 刹停之后直接结束这一帧，不再读取按键移动
+            return; 
         }
 
         // ==========================================
@@ -157,24 +186,22 @@ public class PlayerMovement : MonoBehaviour
         // ==========================================
         float moveInput = Input.GetAxisRaw("Horizontal");
 
-        if(moveInput>0)
+        if(moveInput > 0)
         {
-            facingDirection=1;
+            facingDirection = 1;
             transform.localScale = new Vector3(1, 1, 1); 
         }
-        else if(moveInput<0)
+        else if(moveInput < 0)
         {
-            facingDirection=-1;
+            facingDirection = -1;
             transform.localScale = new Vector3(-1, 1, 1); 
         }
 
-        // 赋予正常的移动速度
         rb.velocity = new Vector2(
             moveInput * moveSpeed,
             rb.velocity.y
         );
 
-        // 同步跑步动画
         if (anim != null)
         {
             bool isMoving = Mathf.Abs(moveInput) > 0f;
@@ -182,7 +209,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // 跳跃检测
-        if(Input.GetKeyDown(KeyCode.Space) && jumpsRemaining>0)
+        if(Input.GetKeyDown(KeyCode.Space) && jumpsRemaining > 0)
         {
             rb.velocity = new Vector2(
                 rb.velocity.x,
@@ -192,7 +219,6 @@ public class PlayerMovement : MonoBehaviour
 
             if (anim != null) anim.SetTrigger("Jump");
 
-            // 【音效】：播放跳跃音效
             if (audioSource != null && jumpSound != null)
             {
                 audioSource.PlayOneShot(jumpSound);
@@ -203,12 +229,12 @@ public class PlayerMovement : MonoBehaviour
         if(Input.GetKey(KeyCode.L) && rb.velocity.y < 0 && !isGrounded)
         {
             rb.gravityScale = glideGravity;
-            isGliding=true;
+            isGliding = true;
         }
         else
         {
             rb.gravityScale = normalGravity;
-            isGliding=false;
+            isGliding = false;
         }
         
         if (anim != null) anim.SetBool("isGliding", isGliding);
@@ -216,18 +242,36 @@ public class PlayerMovement : MonoBehaviour
         // 冲刺检测
         if(Input.GetKeyDown(KeyCode.LeftShift) && !isDashing && canDash)
         {
-            canDash=false;
+            canDash = false;
 
-            // 【音效】：播放冲刺音效
             if (audioSource != null && dashSound != null)
             {
                 audioSource.PlayOneShot(dashSound);
             }
 
             StartCoroutine(Dash());
-            
-            // 【还原你的机制】：保留了这里的 canDash = true; 实现你要的冲刺效果
-            canDash=true;
+        }
+    }
+
+    // 🎯【新增】：更新衝刺 UI 進度與發光圖層的方法
+    private void UpdateDashUI()
+    {
+        if (dashBarFill != null)
+        {
+            dashBarFill.fillAmount = dashTimer / dashCooldown;
+        }
+
+        if (dashGlowLayer != null)
+        {
+            // 當計時器大於等於冷卻時間（即衝刺就緒）時，開啟發光圖層，否則關閉
+            if (dashTimer >= dashCooldown)
+            {
+                dashGlowLayer.SetActive(true);
+            }
+            else
+            {
+                dashGlowLayer.SetActive(false);
+            }
         }
     }
 
@@ -237,16 +281,12 @@ public class PlayerMovement : MonoBehaviour
         {
             CalculatePlayerBounds();
         }
-
         KeepPlayerInsideMap();
     }
 
     private void CalculatePlayerBounds()
     {
-        if (mapSprite == null)
-        {
-            return;
-        }
+        if (mapSprite == null) return;
 
         if (playerSprite == null)
         {
@@ -254,7 +294,6 @@ public class PlayerMovement : MonoBehaviour
         }
 
         Bounds mapBounds = mapSprite.bounds;
-
         float playerHalfWidth = 0f;
         float playerHalfHeight = 0f;
 
@@ -266,7 +305,6 @@ public class PlayerMovement : MonoBehaviour
 
         minX = mapBounds.min.x + playerHalfWidth;
         maxX = mapBounds.max.x - playerHalfWidth;
-
         minY = mapBounds.min.y + playerHalfHeight;
         maxY = mapBounds.max.y - playerHalfHeight;
 
@@ -275,10 +313,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void KeepPlayerInsideMap()
     {
-        if (mapSprite == null)
-        {
-            return;
-        }
+        if (mapSprite == null) return;
 
         float clampedX = Mathf.Clamp(transform.position.x, minX, maxX);
         float clampedY = transform.position.y;
@@ -288,10 +323,6 @@ public class PlayerMovement : MonoBehaviour
             clampedY = Mathf.Clamp(transform.position.y, minY, maxY);
         }
 
-        transform.position = new Vector3(
-            clampedX,
-            clampedY,
-            transform.position.z
-        );
+        transform.position = new Vector3(clampedX, clampedY, transform.position.z);
     }
 }

@@ -259,6 +259,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas
       objectReference: {fileID: 0}
+    - target: {fileID: 1802265292073628529, guid: b5cfc8f05e845a54d81bceecae013a98, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1859927552757357983, guid: b5cfc8f05e845a54d81bceecae013a98, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 41.4
@@ -529,17 +533,6 @@ PrefabInstance:
       addedObject: {fileID: 1267120452}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b5cfc8f05e845a54d81bceecae013a98, type: 3}
---- !u!114 &911468961 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4962464330297012976, guid: b5cfc8f05e845a54d81bceecae013a98, type: 3}
-  m_PrefabInstance: {fileID: 911468960}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &911468962 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8999013896505158213, guid: b5cfc8f05e845a54d81bceecae013a98, type: 3}
@@ -896,7 +889,7 @@ PrefabInstance:
     - target: {fileID: 4602895530218296333, guid: 2ec805d3f9ed4844aba4877d894b335d, type: 3}
       propertyPath: guideText
       value: 
-      objectReference: {fileID: 911468961}
+      objectReference: {fileID: 0}
     - target: {fileID: 4602895530218296333, guid: 2ec805d3f9ed4844aba4877d894b335d, type: 3}
       propertyPath: guidePanel
       value: 
