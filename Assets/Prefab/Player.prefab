@@ -178,8 +178,16 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   audioSource: {fileID: 7691347398783076103}
+<<<<<<< Updated upstream
   jumpSound: {fileID: 8300000, guid: e314ff5dcfeb5f846b304f8204776f47, type: 3}
   dashSound: {fileID: 8300000, guid: db7e09da45cf4ba44a7d6ec2b25ea8f3, type: 3}
+=======
+  jumpSound: {fileID: 8300000, guid: 6522b1a87890a2e40aeabd67fc42cbd5, type: 3}
+  dashSound: {fileID: 8300000, guid: dc5c971375df7ef488cf65baf1cdf4b4, type: 3}
+  dashBarFill: {fileID: 0}
+  dashGlowLayer: {fileID: 0}
+  dashCooldown: 1
+>>>>>>> Stashed changes
   maxJumps: 2
   dashSpeed: 15
   dashDuration: 0.2
@@ -232,6 +240,7 @@ MonoBehaviour:
   attackPoint: {fileID: 7315757198051840323}
   effectDuration: 0.5
   chargeBarFill: {fileID: 0}
+  glowLayer: {fileID: 0}
   weaponDamage: {fileID: 2691327098414171630}
 --- !u!82 &7691347398783076103
 AudioSource:
