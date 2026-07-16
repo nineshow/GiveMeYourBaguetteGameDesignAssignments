@@ -28,6 +28,7 @@ public class PlayerCombat : MonoBehaviour
 
     [Header("UI Settings")]
     public Image chargeBarFill;                 // UI 充能条（必须是Image Type为Filled的图片）
+    public GameObject glowLayer;                // 满能量时的发光特效图层/图片
 
     private Animator anim;
 
@@ -176,6 +177,18 @@ public class PlayerCombat : MonoBehaviour
             // Fill Amount 需要 0 到 1 之间的小数。
             // 强转 float 是为了避免整数除法直接变成 0 (比如 50/100 默认等于 0)。
             chargeBarFill.fillAmount = (float)currentCharge / maxCharge;
+        }
+            if (glowLayer != null)
+        {
+            // 当当前能量达到最大值时，打开全局发光图层，否则关闭
+            if (currentCharge >= maxCharge)
+            {
+                glowLayer.SetActive(true);
+            }
+            else
+            {
+                glowLayer.SetActive(false);
+            }
         }
     }
 }
