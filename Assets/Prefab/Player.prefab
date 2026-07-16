@@ -173,11 +173,11 @@ MonoBehaviour:
   jumpForce: 10
   normalGravity: 3
   glideGravity: 0.5
-  groundCheck: {fileID: 1244856433290122378}
+  groundCheck: {fileID: 0}
   groundLayer:
     serializedVersion: 2
     m_Bits: 128
-  audioSource: {fileID: 7691347398783076103}
+  audioSource: {fileID: 0}
   jumpSound: {fileID: 8300000, guid: 6522b1a87890a2e40aeabd67fc42cbd5, type: 3}
   dashSound: {fileID: 8300000, guid: dc5c971375df7ef488cf65baf1cdf4b4, type: 3}
   dashBarFill: {fileID: 0}
@@ -187,7 +187,7 @@ MonoBehaviour:
   dashSpeed: 15
   dashDuration: 0.2
   mapSprite: {fileID: 0}
-  playerSprite: {fileID: 1185046862775117850}
+  playerSprite: {fileID: 0}
   clampY: 0
 --- !u!114 &6295673197584347179
 MonoBehaviour:
@@ -226,14 +226,19 @@ MonoBehaviour:
   isDefending: 1
   normalAttackKey: 106
   normalAttackEffectPrefab: {fileID: 8525990746615576120, guid: b85d21f3b8fed714bacf0c4fd50fa512, type: 3}
+  effectDelay: 0.17
+  comboStep: 0
+  comboResetTime: 0.8
+  attackCooldown: 0.2
   currentCharge: 0
   maxCharge: 100
   chargeAttackReady: 0
   chargeAttackKey: 114
   chargeAttackActivated: 0
   chargeAttackEffectPrefab: {fileID: 2504214343621411470, guid: 3ed0d324122d7b24eaec75c55c74aafc, type: 3}
+  chargeEffectDelay: 0
   attackPoint: {fileID: 7315757198051840323}
-  effectDuration: 0.5
+  effectDuration: 1
   chargeBarFill: {fileID: 0}
   glowLayer: {fileID: 0}
   weaponDamage: {fileID: 2691327098414171630}
@@ -456,7 +461,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5492809516569506210
 Transform:
   m_ObjectHideFlags: 0
@@ -479,7 +484,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2719187620115743747}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -532,12 +537,10 @@ MonoBehaviour:
   damage: 10
   chargeGainPerHit: 20
   attackDuration: 0.2
-  comboStep: 0
-  comboResetTime: 0.6
-  attackCooldown: 0.2
   audioSource: {fileID: 7691347398783076103}
   attackSound: {fileID: 8300000, guid: 0342a2d7568d3c94eb0484c67b322a80, type: 3}
   hitSound: {fileID: 0}
+  chargeAttackSound: {fileID: 0}
 --- !u!1 &3087046396843961602
 GameObject:
   m_ObjectHideFlags: 0
@@ -639,12 +642,10 @@ MonoBehaviour:
   damage: 10
   chargeGainPerHit: 20
   attackDuration: 0.2
-  comboStep: 0
-  comboResetTime: 0.8
-  attackCooldown: 0.5
-  audioSource: {fileID: 0}
-  attackSound: {fileID: 0}
+  audioSource: {fileID: 7691347398783076103}
+  attackSound: {fileID: 8300000, guid: 0342a2d7568d3c94eb0484c67b322a80, type: 3}
   hitSound: {fileID: 0}
+  chargeAttackSound: {fileID: 8300000, guid: c05f11268e2e4e8428594e920273ca20, type: 3}
 --- !u!58 &8214677636771822551
 CircleCollider2D:
   m_ObjectHideFlags: 0

@@ -13,6 +13,14 @@ public class PlayerCombat : MonoBehaviour
     [Header("Normal Attack")]
     public KeyCode normalAttackKey = KeyCode.J;
     public GameObject normalAttackEffectPrefab; // 普通攻击的特效预制体
+    public float effectDelay = 0.15f;           // 特效延迟生成的秒数（可根据动画自行调整）
+
+    [Header("Combo & Cooldown Setting ")] 
+    public int comboStep = 0;          
+    public float comboResetTime = 0.8f;  
+    public float attackCooldown = 0.5f;  
+    private float nextAttackTime = 0f;   
+    private float lastAttackTime;
 
     [Header("Charge Attack")]
     public int currentCharge = 0;
@@ -21,6 +29,7 @@ public class PlayerCombat : MonoBehaviour
     public KeyCode chargeAttackKey = KeyCode.R;
     public bool chargeAttackActivated = false;
     public GameObject chargeAttackEffectPrefab; // 蓄力攻击的特效预制体
+    public float chargeEffectDelay = 0.25f;
 
     [Header("Attack Settings (Common)")]
     public Transform attackPoint;               // 攻击特效的生成点
@@ -57,15 +66,12 @@ public class PlayerCombat : MonoBehaviour
         // 2. 普通攻击逻辑 (按下J键)
         if (Input.GetKeyDown(normalAttackKey))
         {
-            if (anim != null)
-            {
-                anim.SetTrigger("NormalAttack"); 
-            }
-            
-            // 生成普通攻击特效
-            SpawnEffect(normalAttackEffectPrefab);
-            
-            Debug.Log("Normal Attack Triggered!");
+            if (isDefending) return;
+
+            // 🔒【嚴格冷卻攔截】：如果冷卻時間沒到，直接折返，絕對不播動畫或生成特效！
+            if (Time.time < nextAttackTime) return; 
+
+            NormalAttack();
         }
 
         // 3. 蓄力/特殊攻击逻辑 (条件：按下R键 + 能量已满 + 当前没有正在释放大招)
@@ -80,19 +86,66 @@ public class PlayerCombat : MonoBehaviour
                 anim.SetTrigger("ChargeAttack");
             }
 
-            // 生成大招专属特效
-            SpawnEffect(chargeAttackEffectPrefab);
-
             if(weaponDamage != null)
             {
-                weaponDamage.PerformChargeAttack();
+                weaponDamage.PerformChargeAttack(chargeEffectDelay);
             }
-
+            StartCoroutine(SpawnEffectWithDelay(chargeAttackEffectPrefab, chargeEffectDelay));
             // 释放大招后立刻调用消耗逻辑，进度条会瞬间清零
             ConsumeChargeAttack();
 
             Debug.Log("Charge Attack Activated & Bar Reset!");
         }
+    }
+
+    void NormalAttack()
+    {
+        // 檢查連擊重置
+        if (Time.time - lastAttackTime > comboResetTime && comboStep > 0)
+        {
+            ResetCombo();
+        }
+
+        // 更新計時器
+        lastAttackTime = Time.time;
+        nextAttackTime = Time.time + attackCooldown; // 鎖死冷卻時間
+
+        comboStep++;
+        if (comboStep > 3) comboStep = 1;
+
+        // 瞬間觸發動畫（讓角色先動起來）
+        if (anim != null)
+        {
+            anim.SetInteger("comboStep", comboStep);
+            anim.SetTrigger("Attack"); 
+        }
+
+        // 瞬間叫武器打開碰撞體與播放音效（打擊判定不延遲）
+        if (weaponDamage != null)
+        {
+            weaponDamage.TriggerNormalAttackCollider();
+        }
+
+        // 🎯【核心改動】：啟動協程，讓特效在後面慢慢排隊生成
+        StartCoroutine(SpawnEffectWithDelay(normalAttackEffectPrefab, effectDelay));
+
+        Debug.Log($"Normal Attack Step {comboStep} Triggered!");
+    }
+
+    // 🎯【新增】：負責處理特效延遲生成的協程
+    private IEnumerator SpawnEffectWithDelay(GameObject effectPrefab, float delay)
+    {
+        if (delay > 0f)
+        {
+            yield return new WaitForSeconds(delay);
+        }
+        SpawnEffect(effectPrefab);
+    }
+
+    public void ResetCombo()
+    {
+        comboStep = 0;
+        if (anim != null) anim.SetInteger("comboStep", 0);
     }
 
     // 防御减伤相关
@@ -160,7 +213,7 @@ public class PlayerCombat : MonoBehaviour
             if (transform.localScale.x < 0)
             {
                 Vector3 effectScale = effect.transform.localScale;
-                effectScale.x *= -1;
+                //effectScale.x *= -1;
                 effect.transform.localScale = effectScale;
             }
 

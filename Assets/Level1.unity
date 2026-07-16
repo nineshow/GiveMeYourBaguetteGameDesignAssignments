@@ -796,9 +796,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 483167468}
     - target: {fileID: 6244958019954591936, guid: cab54508aae841942bdf4e6ca03b78ac, type: 3}
+      propertyPath: audioSource
+      value: 
+      objectReference: {fileID: 2049091941}
+    - target: {fileID: 6244958019954591936, guid: cab54508aae841942bdf4e6ca03b78ac, type: 3}
       propertyPath: dashBarFill
       value: 
       objectReference: {fileID: 1475472571}
+    - target: {fileID: 6244958019954591936, guid: cab54508aae841942bdf4e6ca03b78ac, type: 3}
+      propertyPath: groundCheck
+      value: 
+      objectReference: {fileID: 1007418958}
     - target: {fileID: 6244958019954591936, guid: cab54508aae841942bdf4e6ca03b78ac, type: 3}
       propertyPath: dashGlowLayer
       value: 
@@ -823,6 +831,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82c5c35a7b5746c4ca344561a6df38d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &1007418958 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1244856433290122378, guid: cab54508aae841942bdf4e6ca03b78ac, type: 3}
+  m_PrefabInstance: {fileID: 861998661}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1024332232
 GameObject:
   m_ObjectHideFlags: 0
@@ -1502,6 +1515,10 @@ PrefabInstance:
       propertyPath: fadeMask
       value: 
       objectReference: {fileID: 1542304736}
+    - target: {fileID: 1838618834549831000, guid: b5cfc8f05e845a54d81bceecae013a98, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1859927552757357983, guid: b5cfc8f05e845a54d81bceecae013a98, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 41.4
@@ -1524,7 +1541,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2113070193652747504, guid: b5cfc8f05e845a54d81bceecae013a98, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.000030517578
+      value: -0.000061035156
       objectReference: {fileID: 0}
     - target: {fileID: 2127827645843096946, guid: b5cfc8f05e845a54d81bceecae013a98, type: 3}
       propertyPath: m_fontSize
@@ -1564,6 +1581,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3246979359667334328, guid: b5cfc8f05e845a54d81bceecae013a98, type: 3}
       propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4180195548349986050, guid: b5cfc8f05e845a54d81bceecae013a98, type: 3}
+      propertyPath: m_PresetInfoIsWorld
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4364575338900054437, guid: b5cfc8f05e845a54d81bceecae013a98, type: 3}
@@ -2140,6 +2161,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2030482399}
   m_CullTransparentMesh: 1
+--- !u!82 &2049091941 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 7691347398783076103, guid: cab54508aae841942bdf4e6ca03b78ac, type: 3}
+  m_PrefabInstance: {fileID: 861998661}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1073897732371740938
 PrefabInstance:
   m_ObjectHideFlags: 0
