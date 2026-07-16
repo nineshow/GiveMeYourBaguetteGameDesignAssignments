@@ -11,7 +11,7 @@ public class GuideTrigger : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            GuideManager.Instance.ShowGuide(guideIndex);
+            GuideManager.Instance.ShowGuildPanel(guideIndex);
         }
     }
 

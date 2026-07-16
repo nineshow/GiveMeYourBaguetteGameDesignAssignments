@@ -47,8 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 960547bccd996064aa18947198e72a33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gold: 30
-  potionCount: 0
+  playerData: {fileID: 0}
   potionPrice: 20
   healAmount: 30
   goldText: {fileID: 0}
@@ -67,14 +66,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 105375cc79a3789479193b94e6c0ef6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  achievementPanel: {fileID: 0}
+  achievementTitleText: {fileID: 0}
+  achievementDescriptionText: {fileID: 0}
+  achievementIconImage: {fileID: 0}
   achievements:
   - id: FALL
     title: Opps......I Slipped
     description: Newton sure didn't like me
+    icon: {fileID: 0}
     unlocked: 0
   - id: BADAPPLE
     title: Rotten to the Core
     description: Even prince's kiss won't save Snow White
+    icon: {fileID: 0}
     unlocked: 0
 --- !u!114 &7487084990125303303
 MonoBehaviour:
@@ -102,8 +107,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42a94a02c4170294aa1b9248812170c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  guides:
-  - Press J to Attack
-  - Press Space to Jump
-  guidePanel: {fileID: 0}
-  guideText: {fileID: 0}
+  guildPanels:
+  - {fileID: 0}
