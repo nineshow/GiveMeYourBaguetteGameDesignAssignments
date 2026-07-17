@@ -1231,7 +1231,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8409181360674613736, guid: cf600abe7eb69e147a73ef447148c0f2, type: 3}
       propertyPath: maxHP
-      value: 500
+      value: 350
+      objectReference: {fileID: 0}
+    - target: {fileID: 8409181360674613736, guid: cf600abe7eb69e147a73ef447148c0f2, type: 3}
+      propertyPath: currentHP
+      value: 350
       objectReference: {fileID: 0}
     - target: {fileID: 8409181360674613736, guid: cf600abe7eb69e147a73ef447148c0f2, type: 3}
       propertyPath: loadTriggerPrefab

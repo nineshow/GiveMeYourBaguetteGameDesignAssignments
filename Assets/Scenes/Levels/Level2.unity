@@ -1698,7 +1698,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5704576816526969485, guid: b5cfc8f05e845a54d81bceecae013a98, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6018885729822652188, guid: b5cfc8f05e845a54d81bceecae013a98, type: 3}
       propertyPath: m_Pivot.x
@@ -2073,7 +2073,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3501889554513738397, guid: f41fcb9dda781aa4fb478cd44965b1e0, type: 3}
       propertyPath: maxHP
-      value: 520
+      value: 250
+      objectReference: {fileID: 0}
+    - target: {fileID: 3501889554513738397, guid: f41fcb9dda781aa4fb478cd44965b1e0, type: 3}
+      propertyPath: currentHP
+      value: 250
       objectReference: {fileID: 0}
     - target: {fileID: 3501889554513738397, guid: f41fcb9dda781aa4fb478cd44965b1e0, type: 3}
       propertyPath: hasRageMode
