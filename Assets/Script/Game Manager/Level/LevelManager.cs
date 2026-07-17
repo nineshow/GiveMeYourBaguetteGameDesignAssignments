@@ -79,8 +79,19 @@ public class LevelManager : MonoBehaviour
 
     public void LoadNextLevel()
     {
-        int nextLevelID=GetCurrentLevelID()+1;
-        Debug.Log("Loading next level: "+nextLevelID);
+        int currentLevelID = GetCurrentLevelID();
+        int nextLevelID = currentLevelID + 1;
+       
+        int lastSceneID = 15;
+
+         if(currentLevelID==lastSceneID)
+        {
+            Debug.Log("Last scene completed. Loading Main Menu.");
+            LoadMainMenu();
+            return;
+        }
+        
+        Debug.Log("Loading next level: " + nextLevelID);
         LoadLevel(nextLevelID);
         
     }
@@ -100,7 +111,7 @@ public class LevelManager : MonoBehaviour
 
     public void LoadMainMenu()
     {
-        SceneManager.LoadScene(0);
+        LoadLevel(0); 
         if(gameOverPanel!=null)
         {
             gameOverPanel.SetActive(false);
