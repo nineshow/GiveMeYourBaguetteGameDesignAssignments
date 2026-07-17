@@ -708,7 +708,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5085346098415254990, guid: b5cfc8f05e845a54d81bceecae013a98, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -18.7469
+      value: -18.746948
       objectReference: {fileID: 0}
     - target: {fileID: 5306174525813989033, guid: b5cfc8f05e845a54d81bceecae013a98, type: 3}
       propertyPath: m_Color.a
@@ -830,6 +830,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: BuyPotion
       objectReference: {fileID: 0}
+    - target: {fileID: 8088960305139343747, guid: b5cfc8f05e845a54d81bceecae013a98, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 25.889038
+      objectReference: {fileID: 0}
     - target: {fileID: 8278179747223867591, guid: b5cfc8f05e845a54d81bceecae013a98, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -847,6 +851,7 @@ PrefabInstance:
     m_RemovedGameObjects:
     - {fileID: 2644938007286958762, guid: b5cfc8f05e845a54d81bceecae013a98, type: 3}
     - {fileID: 3917150325237084780, guid: b5cfc8f05e845a54d81bceecae013a98, type: 3}
+    - {fileID: 1229503872360878630, guid: b5cfc8f05e845a54d81bceecae013a98, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 5006321053140158046, guid: b5cfc8f05e845a54d81bceecae013a98, type: 3}
       insertIndex: -1
@@ -927,17 +932,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 5006321053140158046, guid: b5cfc8f05e845a54d81bceecae013a98, type: 3}
   m_PrefabInstance: {fileID: 2040975375}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2084947158 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 122942865842038742, guid: 9f60062e1a1bb0d4eb9ccc2ac2854549, type: 3}
-  m_PrefabInstance: {fileID: 3104957270286529104}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2091004343
 GameObject:
   m_ObjectHideFlags: 0
@@ -1013,7 +1007,7 @@ RectTransform:
   m_AnchoredPosition: {x: -107.100006, y: 0.0000076293945}
   m_SizeDelta: {x: 64.961, y: 64.961}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1001 &3104957270286529104
+--- !u!1001 &2127800856
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -1021,18 +1015,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 456768810107452782, guid: 9f60062e1a1bb0d4eb9ccc2ac2854549, type: 3}
-      propertyPath: fadeMask
-      value: 
-      objectReference: {fileID: 2084947158}
-    - target: {fileID: 456768810107452782, guid: 9f60062e1a1bb0d4eb9ccc2ac2854549, type: 3}
-      propertyPath: fadeInDuration
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 456768810107452782, guid: 9f60062e1a1bb0d4eb9ccc2ac2854549, type: 3}
-      propertyPath: fadeOutDuration
-      value: 0.5
-      objectReference: {fileID: 0}
     - target: {fileID: 1063625249092295184, guid: 9f60062e1a1bb0d4eb9ccc2ac2854549, type: 3}
       propertyPath: m_Name
       value: TransitionCanvas
@@ -1117,8 +1099,7 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 4817335145167698603, guid: 9f60062e1a1bb0d4eb9ccc2ac2854549, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1131,5 +1112,5 @@ SceneRoots:
   - {fileID: 848530313}
   - {fileID: 684153835}
   - {fileID: 860596603}
-  - {fileID: 3104957270286529104}
   - {fileID: 2040975375}
+  - {fileID: 2127800856}

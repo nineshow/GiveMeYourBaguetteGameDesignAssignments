@@ -108,17 +108,17 @@ MonoBehaviour:
   normalAnimController: {fileID: 9100000, guid: c4753731470ff83458b72ecb85c504e1, type: 2}
   rageAnimController: {fileID: 9100000, guid: f24cfccc65f6e324fabbc27d7dfe5bf6, type: 2}
   transformToRageTime: 2.04
-  revertToNormalTime: 2
+  revertToNormalTime: 2.04
   attackDamage: 10
   detectionRadius: 8
-  attackRadius: 4.5
-  scratchRadius: 2
+  attackRadius: 5
+  scratchRadius: 3.5
   patrolSpeed: 1.5
   chaseSpeed: 3
   patrolDistance: 3
   idleTime: 1.5
-  pounceForceX: 5
-  pounceForceY: 3
+  pounceForceX: 6
+  pounceForceY: 4
   pouncePreparationTime: 0.2
   scratchPreparationTime: 0.2
   scratchHitboxOffset: 1
@@ -211,6 +211,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   coinPrefab: {fileID: 6304821386139726524, guid: f28fcdc8728445444a1beccef617947a, type: 3}
+  loadTriggerPrefab: {fileID: 0}
   maxHP: 200
   currentHP: 0
   healthFill: {fileID: 0}
